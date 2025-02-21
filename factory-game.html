@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Factory Builder</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://pixijs.download/release/pixi.js"></script>
+</head>
+<body>
+    <div class="game-container">
+        <div class="game-ui">
+            <div class="resources-panel">
+                <h3>Grondstoffen</h3>
+                <div id="resourcesList"></div>
+            </div>
+            <div class="building-panel">
+                <h3>Gebouwen</h3>
+                <div class="building-option" onclick="game.selectBuilding('miner')">
+                    <span>Delver</span>
+                    <span>Kosten: 200</span>
+                </div>
+                <div class="building-option" onclick="game.selectBuilding('conveyor')">
+                    <span>Lopende Band</span>
+                    <span>Kosten: 50</span>
+                </div>
+                <div class="building-option" onclick="game.selectBuilding('smelter')">
+                    <span>Smelterij</span>
+                    <span>Kosten: 300</span>
+                </div>
+            </div>
+        </div>
+        <canvas id="gameCanvas"></canvas>
+    </div>
+    <script src="factory-game.js"></script>
+</body>
+</html> 

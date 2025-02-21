@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GamePortal - Game Galerij</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/gallery.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <nav class="main-nav">
+        <!-- Zelfde navigatie als index.html -->
+    </nav>
+
+    <main class="gallery-container">
+        <section class="preferences-section">
+            <h2>Jouw Game Voorkeuren</h2>
+            <div class="preferences-filters">
+                <div class="filter-group">
+                    <label>Genre:</label>
+                    <select id="genreFilter" multiple>
+                        <option value="action">Actie</option>
+                        <option value="puzzle">Puzzel</option>
+                        <option value="strategy">Strategie</option>
+                        <option value="arcade">Arcade</option>
+                        <option value="adventure">Avontuur</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Moeilijkheidsgraad:</label>
+                    <select id="difficultyFilter">
+                        <option value="all">Alle</option>
+                        <option value="easy">Makkelijk</option>
+                        <option value="medium">Gemiddeld</option>
+                        <option value="hard">Moeilijk</option>
+                    </select>
+                </div>
+                <button id="applyFilters" class="filter-button">Toepassen</button>
+            </div>
+        </section>
+
+        <section class="recommended-games">
+            <h2>Aanbevolen voor jou</h2>
+            <div id="recommendedGamesGrid" class="games-grid">
+                <!-- Games worden hier dynamisch toegevoegd -->
+            </div>
+        </section>
+
+        <section class="all-games">
+            <h2>Alle Games</h2>
+            <div id="allGamesGrid" class="games-grid">
+                <!-- Games worden hier dynamisch toegevoegd -->
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <!-- Zelfde footer als index.html -->
+    </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-firestore.js"></script>
+    <script src="js/gallery.js"></script>
+</body>
+</html> 

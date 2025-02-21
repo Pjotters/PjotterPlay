@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Factory Builder - GamePortal</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="css/factory-game.css">
+    <script src="https://pixijs.download/release/pixi.js"></script>
+</head>
+<body>
+    <div class="game-container">
+        <div class="game-ui">
+            <div class="resources-panel">
+                <h3>Grondstoffen</h3>
+                <div id="resourcesList"></div>
+            </div>
+            <div class="building-panel">
+                <h3>Gebouwen</h3>
+                <div class="building-option" onclick="game.selectBuilding('miner')">
+                    <span>Delver</span>
+                    <span>Kosten: 200</span>
+                </div>
+                <div class="building-option" onclick="game.selectBuilding('conveyor')">
+                    <span>Lopende Band</span>
+                    <span>Kosten: 50</span>
+                </div>
+                <div class="building-option" onclick="game.selectBuilding('transporter')">
+                    <span>Transporteur</span>
+                    <span>Kosten: 300</span>
+                </div>
+            </div>
+            <div class="workers-panel">
+                <h3>Werknemers</h3>
+                <div class="worker-option" onclick="game.hireWorker('woodcutters')">
+                    <span>Houthakker inhuren (50 geld)</span>
+                    <span id="woodcutters-count">0</span>
+                </div>
+                <div class="worker-option" onclick="game.hireWorker('miners')">
+                    <span>Mijnwerker inhuren (75 geld)</span>
+                    <span id="miners-count">0</span>
+                </div>
+                <div class="worker-option" onclick="game.hireWorker('glassmakers')">
+                    <span>Glasmaker inhuren (100 geld)</span>
+                    <span id="glassmakers-count">0</span>
+                </div>
+            </div>
+        </div>
+        <canvas id="gameCanvas"></canvas>
+        <div class="world-switcher">
+            <button id="switchWorld">Wissel van Wereld</button>
+        </div>
+    </div>
+    <script src="js/factory-game.js" type="module"></script>
+</body>
+</html> 
