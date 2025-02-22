@@ -50,10 +50,19 @@ class MinecraftGame {
         const skybox = new THREE.Mesh(skyboxGeometry, skyboxMaterial);
         this.scene.add(skybox);
         
+        // Ore types definiëren
+        this.oreTypes = {
+            GOLD: { color: 0xFFD700, rarity: 0.02 },
+            DIAMOND: { color: 0x00FFFF, rarity: 0.01 },
+            IRON: { color: 0xC0C0C0, rarity: 0.03 }
+        };
+        
         // Eerst texturen laden, dan pas de wereld maken
         this.loadTextures().then(() => {
             this.createWorld();
             this.animate();
+        }).catch(error => {
+            console.error('Error loading textures:', error);
         });
         
         // UI en controls wel direct instellen
@@ -67,13 +76,6 @@ class MinecraftGame {
         
         // Uitgebreide controls setup
         this.setupControls();
-        
-        // Extra materialen voor ores
-        this.oreTypes = {
-            GOLD: { color: 0xFFD700, rarity: 0.02 },
-            DIAMOND: { color: 0x00FFFF, rarity: 0.01 },
-            IRON: { color: 0xC0C0C0, rarity: 0.03 }
-        };
         
         // Crafting en inventory systeem
         this.craftingRecipes = {
@@ -95,20 +97,16 @@ class MinecraftGame {
                         resolve(texture);
                     },
                     undefined,
-                    (error) => {
-                        console.error(`Error loading texture ${url}:`, error);
-                        reject(error);
-                    }
+                    reject
                 );
             });
         };
 
-        // Return de Promise zodat we kunnen wachten
         return Promise.all([
             loadTexture('Images/minecraft/grass.png'),
             loadTexture('Images/minecraft/dirt.png'),
             loadTexture('Images/minecraft/stone.png'),
-            loadTexture('Images/minecraft/hout.png'),
+            loadTexture('Images/minecraft/wood.png'),  // Veranderd van hout.png naar wood.png
             loadTexture('Images/minecraft/leaf.png')
         ]).then(([grassTex, dirtTex, stoneTex, woodTex, leafTex]) => {
             this.materials = {
@@ -116,7 +114,11 @@ class MinecraftGame {
                 dirt: new THREE.MeshLambertMaterial({ map: dirtTex }),
                 stone: new THREE.MeshLambertMaterial({ map: stoneTex }),
                 wood: new THREE.MeshLambertMaterial({ map: woodTex }),
-                leaves: new THREE.MeshLambertMaterial({ map: leafTex, transparent: true, opacity: 0.8 })
+                leaves: new THREE.MeshLambertMaterial({ 
+                    map: leafTex,
+                    transparent: true,
+                    opacity: 0.8
+                })
             };
         });
     }
