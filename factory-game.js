@@ -1,6 +1,4 @@
-import * as PIXI from 'pixi.js';
-
-export class FactoryGame {
+class FactoryGame {
     constructor() {
         // Wacht tot het document geladen is
         document.addEventListener('DOMContentLoaded', () => {
