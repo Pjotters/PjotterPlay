@@ -134,6 +134,40 @@ class FactoryGame {
 
         this.market = new Market();
 
+        this.upgrades = {
+            automation: {
+                name: "Automatische Productie",
+                cost: 5000,
+                effect: "Verhoogt productie met 50%",
+                multiplier: 1.5,
+                purchased: false
+            },
+            efficiency: {
+                name: "Energie Efficiëntie",
+                cost: 3000,
+                effect: "Verlaagt energieverbruik met 30%",
+                multiplier: 0.7,
+                purchased: false
+            },
+            storage: {
+                name: "Uitgebreide Opslag",
+                cost: 2000,
+                effect: "Verdubbelt opslagcapaciteit",
+                multiplier: 2,
+                purchased: false
+            }
+        };
+
+        // Voeg visuele effecten toe
+        this.particles = [];
+        this.animations = new PIXI.AnimatedSprite();
+        
+        // Verbeterde UI elementen
+        this.setupUI();
+        
+        // Voeg achievement systeem toe
+        this.achievements = this.setupAchievements();
+
         this.init();
     }
 
@@ -316,6 +350,47 @@ class FactoryGame {
         building.y = gridY * this.gridSize;
         this.worldContainer.addChild(building);
     }
+
+    setupUI() {
+        // Voeg moderne UI elementen toe
+        this.tooltip = new PIXI.Text('', {
+            fontFamily: 'Arial',
+            fontSize: 14,
+            fill: 0xFFFFFF,
+            align: 'center'
+        });
+        
+        // Voeg minimap toe
+        this.setupMinimap();
+        
+        // Voeg statistieken venster toe
+        this.setupStatistics();
+    }
+
+    setupAchievements() {
+        return {
+            firstFactory: {
+                name: "Eerste Fabriek",
+                description: "Bouw je eerste fabriek",
+                achieved: false
+            },
+            massProduction: {
+                name: "Massaproductie",
+                description: "Produceer 1000 items in totaal",
+                achieved: false
+            },
+            automation: {
+                name: "Automatisering Meester",
+                description: "Heb 10 volledig geautomatiseerde productielijnen",
+                achieved: false
+            }
+        };
+    }
+
+    // Voeg nieuwe game mechanics toe
+    addProductionChain(input, process, output) {
+        return new ProductionChain(input, process, output, this.resources);
+    }
 }
 
 class ProductionLine {
@@ -416,6 +491,30 @@ class Market {
 
     sellResource(resource, amount) {
         return this.prices[resource] * amount * this.demandMultipliers[resource];
+    }
+}
+
+// Nieuwe klasse voor productieketens
+class ProductionChain {
+    constructor(input, process, output, resources) {
+        this.input = input;
+        this.process = process;
+        this.output = output;
+        this.resources = resources;
+        this.efficiency = 1.0;
+        this.level = 1;
+    }
+
+    upgrade() {
+        this.level++;
+        this.efficiency *= 1.1;
+    }
+
+    process() {
+        if (this.hasRequiredResources()) {
+            this.consumeResources();
+            this.produceOutput();
+        }
     }
 }
 
