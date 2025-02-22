@@ -19,6 +19,7 @@ const db = getFirestore(app);
 // Voeg deze functie toe na de bestaande Firebase configuratie
 async function initializeGames() {
     const gamesRef = collection(db, 'games');
+    const querySnapshot = await getDocs(gamesRef);
     
     const games = [
         {
@@ -103,17 +104,19 @@ async function initializeGames() {
         }
     ];
 
-    // Check en voeg elke game toe
-    for (const game of games) {
-        const q = query(gamesRef, where('title', '==', game.title));
-        const querySnapshot = await getDocs(q);
-        
-        if (querySnapshot.empty) {
-            await addDoc(gamesRef, game);
-            console.log(`Added game: ${game.title}`);
-        }
-    }
+    const gameCards = games.map(game => createGameCard(game)).join('');
+    allGamesContainer.innerHTML = gameCards;
+
+    // Initialize AOS
+    AOS.init({
+        duration: 800,
+        offset: 100,
+        once: true
+    });
 }
+
+// Start de game initialisatie
+document.addEventListener('DOMContentLoaded', initializeGames);
 
 // Gebruikersvoorkeuren ophalen
 async function getUserPreferences() {
