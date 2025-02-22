@@ -129,7 +129,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (logoutBtn) {
         logoutBtn.addEventListener('click', (e) => {
             e.preventDefault();
-            // Hier kun je uitlog logica toevoegen
             window.location.href = 'index.html';
         });
     }
