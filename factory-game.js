@@ -1,3 +1,5 @@
+import * as PIXI from 'pixi.js';
+
 export class FactoryGame {
     constructor() {
         this.app = new PIXI.Application({
