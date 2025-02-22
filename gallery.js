@@ -31,7 +31,7 @@ async function initializeGames() {
             imageUrl: '/images/factory-game.png',
             genre: 'strategy',
             difficulty: 'medium',
-            path: '/factory-game.html',
+            path: 'PjotterPlay/factory-game.html',
             features: ['Resource Management', 'Automatisering', 'Werknemers beheer'],
             lastUpdated: new Date().toISOString()
         });
