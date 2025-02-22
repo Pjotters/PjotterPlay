@@ -73,7 +73,7 @@ function createGameCard(game) {
     return `
         <div class="game-card">
             <div class="game-info">
-                <h2>${game.title}</h2>
+                <h3>${game.title}</h3>
                 <p>${game.description}</p>
                 <div class="game-meta">
                     <span class="genre">${game.genre}</span>
@@ -81,8 +81,7 @@ function createGameCard(game) {
                 </div>
             </div>
             <div class="game-actions">
-                <a href="${game.path}" class="play-button">Speel</a>
-                <a href="#" class="more-info">Meer informatie ></a>
+                <a href="${game.path}" class="play-button">Speel nu</a>
             </div>
         </div>
     `;
@@ -101,12 +100,16 @@ function checkLogin() {
 // Games weergeven
 async function displayGames() {
     try {
+        if (!checkLogin()) return;
+        
         const gamesRef = collection(db, 'games');
         const querySnapshot = await getDocs(gamesRef);
         
         const recommendedContainer = document.getElementById('recommendedGamesGrid');
-        if (!recommendedContainer) {
-            console.error('Container element not found');
+        const allGamesContainer = document.getElementById('allGamesGrid');
+        
+        if (!recommendedContainer || !allGamesContainer) {
+            console.error('Container elements not found');
             return;
         }
 
@@ -115,9 +118,10 @@ async function displayGames() {
             ...doc.data()
         }));
 
-        recommendedContainer.innerHTML = games
-            .map(game => createGameCard(game))
-            .join('');
+        // Toon alle games in beide containers
+        const gameCards = games.map(game => createGameCard(game)).join('');
+        recommendedContainer.innerHTML = gameCards;
+        allGamesContainer.innerHTML = gameCards;
 
     } catch (error) {
         console.error('Error fetching games:', error);
@@ -126,21 +130,42 @@ async function displayGames() {
 
 // Event listeners
 document.getElementById('applyFilters').addEventListener('click', async () => {
-    const genres = Array.from(document.getElementById('genreFilter').selectedOptions)
-        .map(option => option.value);
-    const difficulty = document.getElementById('difficultyFilter').value;
-
-    const preferences = { genres, difficulty };
-    localStorage.setItem('gamePreferences', JSON.stringify(preferences));
+    const genreFilter = document.getElementById('genreFilter');
+    const difficultyFilter = document.getElementById('difficultyFilter');
     
-    await displayGames();
+    const filters = {
+        genres: Array.from(genreFilter.selectedOptions).map(option => option.value),
+        difficulty: difficultyFilter.value
+    };
+    
+    const filteredGames = await getFilteredGames(filters);
+    document.getElementById('allGamesGrid').innerHTML = 
+        filteredGames.map(game => createGameCard(game)).join('');
 });
 
-// Roep de functie aan bij het laden van de pagina
+// Initialize games en display ze
 document.addEventListener('DOMContentLoaded', async () => {
     try {
         await initializeGames();
         await displayGames();
+        
+        // Voeg event listeners toe voor filters
+        const applyFiltersButton = document.getElementById('applyFilters');
+        if (applyFiltersButton) {
+            applyFiltersButton.addEventListener('click', async () => {
+                const genreFilter = document.getElementById('genreFilter');
+                const difficultyFilter = document.getElementById('difficultyFilter');
+                
+                const filters = {
+                    genres: Array.from(genreFilter.selectedOptions).map(option => option.value),
+                    difficulty: difficultyFilter.value
+                };
+                
+                const filteredGames = await getFilteredGames(filters);
+                document.getElementById('allGamesGrid').innerHTML = 
+                    filteredGames.map(game => createGameCard(game)).join('');
+            });
+        }
     } catch (error) {
         console.error('Error initializing gallery:', error);
     }

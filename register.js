@@ -13,7 +13,7 @@ const firebaseConfig = {
     appId: "1:64413422793:web:4025770645944818d6e918"
 };
 
-// Initialize Firebase
+// Initialize Firebase met de nieuwe syntax
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
