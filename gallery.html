@@ -3,31 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GamePortal - Game Galerij</title>
+    <title>GamePortal - Game Gallery</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="gallery.css">
 </head>
 <body>
-    <nav class="main-nav">
-        <!-- Zelfde navigatie als index.html -->
+    <nav class="navbar">
+        <div class="nav-brand">GamePortal</div>
+        <div class="nav-links">
+            <a href="#" id="logoutBtn">Uitloggen</a>
+        </div>
     </nav>
 
-    <main class="gallery-container">
-        <section class="preferences-section">
+    <div class="gallery-container">
+        <section class="filters-section">
             <h2>Jouw Game Voorkeuren</h2>
-            <div class="preferences-filters">
+            <div class="filters">
                 <div class="filter-group">
-                    <label>Genre:</label>
+                    <label for="genreFilter">Genre:</label>
                     <select id="genreFilter" multiple>
                         <option value="action">Actie</option>
                         <option value="puzzle">Puzzel</option>
                         <option value="strategy">Strategie</option>
                         <option value="arcade">Arcade</option>
-                        <option value="adventure">Avontuur</option>
                     </select>
                 </div>
                 <div class="filter-group">
-                    <label>Moeilijkheidsgraad:</label>
+                    <label for="difficultyFilter">Moeilijkheidsgraad:</label>
                     <select id="difficultyFilter">
                         <option value="all">Alle</option>
                         <option value="easy">Makkelijk</option>
@@ -39,24 +41,20 @@
             </div>
         </section>
 
-        <section class="recommended-games">
+        <section class="games-section">
             <h2>Aanbevolen voor jou</h2>
             <div id="recommendedGamesGrid" class="games-grid">
                 <!-- Games worden hier dynamisch toegevoegd -->
             </div>
         </section>
 
-        <section class="all-games">
+        <section class="games-section">
             <h2>Alle Games</h2>
             <div id="allGamesGrid" class="games-grid">
                 <!-- Games worden hier dynamisch toegevoegd -->
             </div>
         </section>
-    </main>
-
-    <footer>
-        <!-- Zelfde footer als index.html -->
-    </footer>
+    </div>
 
     <script type="module" src="gallery.js"></script>
 </body>

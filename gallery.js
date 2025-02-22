@@ -91,11 +91,17 @@ function createGameCard(game) {
 function checkLogin() {
     const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
     if (!isLoggedIn) {
-        window.location.href = '/login.html';
+        window.location.href = 'login.html';
         return false;
     }
     return true;
 }
+
+// Voeg deze event listener toe voor de logout knop
+document.getElementById('logoutBtn').addEventListener('click', () => {
+    localStorage.removeItem('userLoggedIn');
+    window.location.href = 'login.html';
+});
 
 // Games weergeven
 async function displayGames() {
