@@ -10,8 +10,8 @@
 }
 
 body {
-    background-color: var(--background-color);
-    color: var(--text-color);
+    background-color: #ffffff;
+    color: #333;
     font-family: Arial, sans-serif;
     margin: 0;
     -webkit-font-smoothing: antialiased;
@@ -19,19 +19,16 @@ body {
 }
 
 .navbar {
-    background: rgba(45, 45, 45, 0.98);
-    backdrop-filter: blur(10px);
+    background: #333;
     padding: 1rem 2rem;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .nav-brand {
     font-size: 1.5rem;
-    font-weight: bold;
-    color: var(--primary-color);
 }
 
 .nav-links a {
@@ -41,10 +38,8 @@ body {
 }
 
 .gallery-container {
-    min-height: 100vh;
-    background: var(--gradient-bg);
     padding: 2rem;
-    color: var(--text-primary);
+    text-align: center;
 }
 
 .gallery-header {
@@ -100,70 +95,66 @@ body {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 2rem;
-    padding: 1rem;
 }
 
 .game-card {
-    background: var(--card-bg);
-    border-radius: 16px;
-    overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background: #f9f9f9;
+    border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    perspective: 1000px;
+    cursor: pointer;
 }
 
-.game-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
-}
-
-.game-image {
+.card-inner {
+    position: relative;
     width: 100%;
-    height: 200px;
-    object-fit: cover;
+    height: 100%;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
 }
 
-.game-info {
-    padding: 1.5rem;
+.game-card:hover .card-inner {
+    transform: rotateY(180deg);
 }
 
-.game-info h3 {
-    font-size: 1.5rem;
-    margin: 0 0 1rem;
+.card-front, .card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 10px;
 }
 
-.game-info p {
-    color: var(--text-color);
-    margin-bottom: 1.5rem;
-    line-height: 1.6;
-}
-
-.game-meta {
+.card-front {
     display: flex;
-    gap: 0.75rem;
-    margin-bottom: 1rem;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
-.genre, .difficulty {
-    padding: 0.4rem 1rem;
-    border-radius: 20px;
-    font-size: 0.9rem;
-    background: rgba(74, 144, 226, 0.2);
-    color: var(--primary-color);
+.card-back {
+    background: #ffffff;
+    color: #333;
+    transform: rotateY(180deg);
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .play-button {
-    display: inline-block;
-    padding: 0.8rem 1.5rem;
-    background: var(--accent-color);
+    padding: 0.5rem 1rem;
+    background: #007aff;
     color: white;
-    text-decoration: none;
-    border-radius: 25px;
-    transition: all 0.3s ease;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
 }
 
 .play-button:hover {
-    background: var(--primary-color);
-    transform: scale(1.05);
+    background: #005bb5;
 }
 
 @media (max-width: 768px) {

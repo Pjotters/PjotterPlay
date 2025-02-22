@@ -18,57 +18,12 @@
     </nav>
 
     <div class="gallery-container">
-        <section class="hero-section">
-            <h1>Welkom username bij GamePortal</h1>
-            <p>Ontdek en speel geweldige games.</p>
-        </section>
+        <h1>Welkom bij GamePortal</h1>
+        <p>Ontdek en speel geweldige games.</p>
 
-        <div class="content-section">
-            <h2>Jouw Game Voorkeuren</h2>
-            <div class="filter-container">
-                <div class="filter-group">
-                    <label>Genre:</label>
-                    <select id="genreFilter">
-                        <option value="all">Alle</option>
-                        <option value="action">Actie</option>
-                        <option value="puzzle">Puzzel</option>
-                        <option value="strategy">Strategie</option>
-                        <option value="arcade">Arcade</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label>Moeilijkheidsgraad:</label>
-                    <select id="difficultyFilter">
-                        <option value="all">Alle</option>
-                        <option value="easy">Makkelijk</option>
-                        <option value="medium">Gemiddeld</option>
-                        <option value="hard">Moeilijk</option>
-                    </select>
-                </div>
-                <button id="applyFilters">Toepassen</button>
-            </div>
-
-            <div class="filtered-games">
-                <h3>Gefilterde Games</h3>
-                <div class="games-grid" id="filteredGamesGrid">
-                    <!-- Gefilterde games komen hier -->
-                </div>
-            </div>
+        <div class="games-grid" id="allGamesGrid">
+            <!-- Dynamisch gegenereerde game kaarten komen hier -->
         </div>
-
-        <section class="games-section">
-            <h2>Aanbevolen voor jou</h2>
-            <div id="recommendedGamesGrid" class="games-grid">
-                <!-- Games worden hier dynamisch toegevoegd -->
-            </div>
-        </section>
-
-        <section class="games-section">
-            <h2>Alle Games</h2>
-            <div id="allGamesGrid" class="games-grid">
-                <!-- Games worden hier dynamisch toegevoegd -->
-            </div>
-        </section>
     </div>
 
     <script type="module" src="gallery.js"></script>

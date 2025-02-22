@@ -149,16 +149,15 @@ async function getFilteredGames(filters) {
 function createGameCard(game) {
     return `
         <div class="game-card">
-            <div class="game-info">
-                <h3>${game.title}</h3>
-                <p>${game.description}</p>
-                <div class="game-meta">
-                    <span class="genre">${game.genre}</span>
-                    <span class="difficulty">${game.difficulty}</span>
+            <div class="card-inner">
+                <div class="card-front">
+                    <img src="${game.imageUrl}" alt="${game.title}" style="width:100%; border-radius: 10px 10px 0 0;">
+                    <h3>${game.title}</h3>
                 </div>
-            </div>
-            <div class="game-actions">
-                <a href="${game.path}" class="play-button">Speel nu</a>
+                <div class="card-back">
+                    <p>${game.description}</p>
+                    <button class="play-button" onclick="startGame('${game.path}')">Start Game</button>
+                </div>
             </div>
         </div>
     `;
