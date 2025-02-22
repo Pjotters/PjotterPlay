@@ -16,7 +16,11 @@ class FactoryGame {
             fuel: 0,
             electronics: 0,
             computers: 0,
-            phones: 0
+            phones: 0,
+            plastic: 0,
+            copper: 0,
+            steel: 0,
+            circuits: 0
         };
 
         this.workers = {
@@ -58,6 +62,29 @@ class FactoryGame {
                 cost: 50,
                 name: "Lopende Band",
                 transport_speed: 1
+            },
+            plastic_factory: {
+                cost: 400,
+                name: "Plastic Fabriek",
+                production: {
+                    plastic: 1
+                },
+                requires: {
+                    fuel: 2
+                },
+                workers_needed: 2
+            },
+            electronics_factory: {
+                cost: 600,
+                name: "Elektronica Fabriek",
+                production: {
+                    electronics: 1
+                },
+                requires: {
+                    copper: 2,
+                    plastic: 1
+                },
+                workers_needed: 3
             }
         };
 
@@ -81,6 +108,31 @@ class FactoryGame {
         
         // Gebouwen plaatsing mode
         this.currentBuildingType = null;
+
+        this.productionLines = {
+            basicElectronics: new ProductionLine(
+                'electronics',
+                { copper: 2, glass: 1 },
+                'electronics',
+                60
+            ),
+            computer: new ProductionLine(
+                'computer',
+                { electronics: 3, glass: 2, plastic: 1 },
+                'computer',
+                120
+            ),
+            smartphone: new ProductionLine(
+                'smartphone',
+                { computer: 1, glass: 2, electronics: 2 },
+                'phone',
+                180
+            )
+        };
+
+        this.research = new Research();
+
+        this.market = new Market();
 
         this.init();
     }
@@ -263,6 +315,107 @@ class FactoryGame {
         building.x = gridX * this.gridSize;
         building.y = gridY * this.gridSize;
         this.worldContainer.addChild(building);
+    }
+}
+
+class ProductionLine {
+    constructor(type, inputResources, outputResource, productionTime) {
+        this.type = type;
+        this.inputResources = inputResources;
+        this.outputResource = outputResource;
+        this.productionTime = productionTime;
+        this.progress = 0;
+        this.isActive = false;
+    }
+
+    update() {
+        if (this.isActive) {
+            this.progress += 1;
+            if (this.progress >= this.productionTime) {
+                this.progress = 0;
+                return true; // Productie voltooid
+            }
+        }
+        return false;
+    }
+}
+
+class Research {
+    constructor() {
+        this.technologies = {
+            automation: {
+                name: "Automatisering",
+                cost: 1000,
+                requirements: [],
+                effects: {
+                    production_speed: 1.5
+                },
+                completed: false
+            },
+            advanced_logistics: {
+                name: "Geavanceerde Logistiek",
+                cost: 2000,
+                requirements: ["automation"],
+                effects: {
+                    transport_speed: 2
+                },
+                completed: false
+            },
+            smart_manufacturing: {
+                name: "Slimme Productie",
+                cost: 3000,
+                requirements: ["automation", "advanced_logistics"],
+                effects: {
+                    resource_efficiency: 1.25
+                },
+                completed: false
+            }
+        };
+    }
+
+    canResearch(techId) {
+        const tech = this.technologies[techId];
+        return tech.requirements.every(req => this.technologies[req].completed);
+    }
+
+    research(techId) {
+        const tech = this.technologies[techId];
+        if (this.canResearch(techId)) {
+            tech.completed = true;
+            return true;
+        }
+        return false;
+    }
+}
+
+class Market {
+    constructor() {
+        this.prices = {
+            wood: 10,
+            glass: 25,
+            electronics: 100,
+            computer: 500,
+            phone: 1000
+        };
+        this.demandMultipliers = {
+            wood: 1,
+            glass: 1,
+            electronics: 1,
+            computer: 1,
+            phone: 1
+        };
+    }
+
+    updatePrices() {
+        // Prijzen fluctueren gebaseerd op vraag en aanbod
+        Object.keys(this.prices).forEach(resource => {
+            const randomFactor = 0.9 + Math.random() * 0.2;
+            this.prices[resource] *= randomFactor;
+        });
+    }
+
+    sellResource(resource, amount) {
+        return this.prices[resource] * amount * this.demandMultipliers[resource];
     }
 }
 

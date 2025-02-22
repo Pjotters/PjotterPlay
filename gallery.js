@@ -1,6 +1,6 @@
 // Firebase configuratie en initialisatie
 import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
+import { getFirestore, collection, query, where, getDocs, addDoc } from 'firebase/firestore';
 
 const firebaseConfig = {
     apiKey: "AIzaSyBCXaYJI9dxwqKD1Qsb_9AOdsnVTPG2uHM",
@@ -14,6 +14,29 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+
+// Voeg deze functie toe na de bestaande Firebase configuratie
+async function initializeGames() {
+    const gamesRef = collection(db, 'games');
+    
+    // Controleer eerst of het spel al bestaat
+    const q = query(gamesRef, where('title', '==', 'Building your Factory'));
+    const querySnapshot = await getDocs(q);
+    
+    if (querySnapshot.empty) {
+        // Voeg het spel toe als het nog niet bestaat
+        await addDoc(gamesRef, {
+            title: 'Building your Factory',
+            description: 'Bouw je eigen fabriek! Beheer grondstoffen, huur werknemers in en automatiseer productieprocessen in deze verslavende factory builder.',
+            imageUrl: '/images/factory-game.png',
+            genre: 'strategy',
+            difficulty: 'medium',
+            path: '/factory-game.html',
+            features: ['Resource Management', 'Automatisering', 'Werknemers beheer'],
+            lastUpdated: new Date().toISOString()
+        });
+    }
+}
 
 // Gebruikersvoorkeuren ophalen
 async function getUserPreferences() {
@@ -49,15 +72,17 @@ async function getFilteredGames(filters) {
 function createGameCard(game) {
     return `
         <div class="game-card">
-            <img src="${game.imageUrl}" alt="${game.title}" class="game-image">
-            <div class="game-info">
-                <h3 class="game-title">${game.title}</h3>
-                <p class="game-description">${game.description}</p>
-                <div class="game-meta">
-                    <span>${game.genre}</span>
-                    <span>${game.difficulty}</span>
+            <a href="${game.path}" class="game-link">
+                <img src="${game.imageUrl}" alt="${game.title}" class="game-image">
+                <div class="game-info">
+                    <h3 class="game-title">${game.title}</h3>
+                    <p class="game-description">${game.description}</p>
+                    <div class="game-meta">
+                        <span>${game.genre}</span>
+                        <span>${game.difficulty}</span>
+                    </div>
                 </div>
-            </div>
+            </a>
         </div>
     `;
 }
@@ -97,5 +122,8 @@ document.getElementById('applyFilters').addEventListener('click', async () => {
     await displayGames();
 });
 
-// Initialisatie
-document.addEventListener('DOMContentLoaded', displayGames); 
+// Roep de functie aan bij het laden van de pagina
+document.addEventListener('DOMContentLoaded', async () => {
+    await initializeGames();
+    displayGames();
+}); 
