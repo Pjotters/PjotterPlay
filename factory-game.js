@@ -178,10 +178,10 @@ class FactoryGame {
                 texture = PIXI.Texture.from('Images/Band-Factory.png');
                 break;
             case 'delver':
-                texture = PIXI.Texture.from('Images/Delver-Factory.png');
+                texture = PIXI.Texture.from('Images/Delver.png');
                 break;
             case 'transporter':
-                texture = PIXI.Texture.from('Images/Transporter-Factory.png');
+                texture = PIXI.Texture.from('Images/Transporter.png');
                 break;
         }
         
