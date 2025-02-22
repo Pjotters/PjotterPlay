@@ -1,6 +1,6 @@
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js';
-import { getAuth, createUserWithEmailAndPassword, updateProfile } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js';
-import { getFirestore, doc, setDoc } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js';
+import firebase from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js';
+import 'https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js';
+import 'https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js';
 
 // Gebruik de bestaande Firebase configuratie
 const firebaseConfig = {
@@ -13,9 +13,9 @@ const firebaseConfig = {
     appId: "1:64413422793:web:4025770645944818d6e918"
 };
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
 
 document.getElementById('registerForm').addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -39,16 +39,16 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
 
     try {
         // Maak nieuwe gebruiker aan
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const userCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);
         const user = userCredential.user;
 
         // Update profiel met gebruikersnaam
-        await updateProfile(user, {
+        await user.updateProfile({
             displayName: username
         });
 
         // Maak gebruikersprofiel aan in Firestore
-        await setDoc(doc(db, 'users', user.uid), {
+        await db.collection('users').doc(user.uid).set({
             username: username,
             email: email,
             createdAt: new Date(),
