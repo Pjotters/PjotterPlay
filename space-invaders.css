@@ -1,0 +1,51 @@
+.game-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: var(--game-bg);
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.game-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.score-container {
+    display: flex;
+    justify-content: space-around;
+    margin: 1rem 0;
+    font-size: 1.2rem;
+}
+
+#gameCanvas {
+    background: #000;
+    border: 2px solid var(--primary-color);
+    border-radius: 8px;
+    display: block;
+    margin: 0 auto;
+}
+
+.game-controls {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+button, .back-button {
+    padding: 0.75rem 1.5rem;
+    border-radius: 25px;
+    border: none;
+    background: var(--primary-color);
+    color: white;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+button:hover, .back-button:hover {
+    transform: translateY(-2px);
+    background: var(--accent-color);
+} 

@@ -22,7 +22,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
     try {
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
         localStorage.setItem('userLoggedIn', 'true');
-        window.location.href = 'PjotterPlay/gallery.html';
+        window.location.href = 'gallery.html';
     } catch (error) {
         alert('Login mislukt: ' + error.message);
     }

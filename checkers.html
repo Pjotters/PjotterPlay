@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dammen - GamePortal</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="checkers.css">
+</head>
+<body>
+    <div class="game-container">
+        <div class="game-header">
+            <h1>Dammen</h1>
+            <div class="player-info">
+                <div class="player player-white">Wit: <span id="whiteScore">0</span></div>
+                <div class="turn-indicator" id="turnIndicator">Wit aan zet</div>
+                <div class="player player-black">Zwart: <span id="blackScore">0</span></div>
+            </div>
+        </div>
+        
+        <div class="board-container">
+            <canvas id="gameCanvas" width="400" height="400"></canvas>
+        </div>
+        
+        <div class="game-controls">
+            <button id="newGameBtn">Nieuw Spel</button>
+            <button id="undoBtn">Ongedaan Maken</button>
+            <a href="gallery.html" class="back-button">Terug naar Galerie</a>
+        </div>
+    </div>
+    <script type="module" src="checkers.js"></script>
+</body>
+</html> 

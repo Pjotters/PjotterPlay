@@ -20,13 +20,8 @@ const db = getFirestore(app);
 async function initializeGames() {
     const gamesRef = collection(db, 'games');
     
-    // Controleer eerst of het spel al bestaat
-    const q = query(gamesRef, where('title', '==', 'Building your Factory'));
-    const querySnapshot = await getDocs(q);
-    
-    if (querySnapshot.empty) {
-        // Voeg het spel toe als het nog niet bestaat
-        await addDoc(gamesRef, {
+    const games = [
+        {
             title: 'Building your Factory',
             description: 'Bouw je eigen fabriek! Beheer grondstoffen, huur werknemers in en automatiseer productieprocessen in deze verslavende factory builder.',
             imageUrl: '/images/factory-game.png',
@@ -35,7 +30,88 @@ async function initializeGames() {
             path: 'PjotterPlay/factory-game.html',
             features: ['Resource Management', 'Automatisering', 'Werknemers beheer'],
             lastUpdated: new Date().toISOString()
-        });
+        },
+        {
+            title: 'Minecraft Classic',
+            description: 'Verken een oneindige wereld, bouw constructies en overleef in deze sandbox klassieker.',
+            imageUrl: '/images/minecraft.png',
+            genre: 'sandbox',
+            difficulty: 'easy',
+            path: 'PjotterPlay/minecraft.html',
+            features: ['Bouwsysteem', 'Verkenning', 'Crafting', 'Survival'],
+            lastUpdated: new Date().toISOString()
+        },
+        {
+            title: 'Tetris Evolution',
+            description: 'De klassieke puzzelgame in een modern jasje. Met nieuwe spelmodi en multiplayer opties.',
+            imageUrl: '/images/tetris.png',
+            genre: 'puzzle',
+            difficulty: 'medium',
+            path: 'PjotterPlay/tetris.html',
+            features: ['Classic Mode', 'Battle Mode', 'Time Trial', 'Multiplayer'],
+            lastUpdated: new Date().toISOString()
+        },
+        {
+            title: 'Space Invaders 2.0',
+            description: 'Verdedig de aarde tegen buitenaardse invasies in deze moderne versie van de arcade klassieker.',
+            imageUrl: '/images/space-invaders.png',
+            genre: 'arcade',
+            difficulty: 'easy',
+            path: 'PjotterPlay/space-invaders.html',
+            features: ['Power-ups', 'Boss Battles', 'Achievements'],
+            lastUpdated: new Date().toISOString()
+        },
+        {
+            title: 'Super Mario Run',
+            description: 'Help Mario door levels vol uitdagingen in deze endless runner versie van de bekende serie.',
+            imageUrl: '/images/mario-run.png',
+            genre: 'action',
+            difficulty: 'easy',
+            path: 'PjotterPlay/mario-run.html',
+            features: ['Auto-run', 'Coin Collection', 'Level Editor'],
+            lastUpdated: new Date().toISOString()
+        },
+        {
+            title: 'Chess Master',
+            description: 'Schaak tegen AI of andere spelers met geavanceerde tutorials en strategieën.',
+            imageUrl: '/images/chess.png',
+            genre: 'strategy',
+            difficulty: 'hard',
+            path: 'PjotterPlay/chess.html',
+            features: ['AI Opponent', 'Online Multiplayer', 'Tutorial Mode'],
+            lastUpdated: new Date().toISOString()
+        },
+        {
+            title: 'Pac-Man Reloaded',
+            description: 'De klassieke maze runner met nieuwe power-ups en moderne graphics.',
+            imageUrl: '/images/pacman.png',
+            genre: 'arcade',
+            difficulty: 'medium',
+            path: 'PjotterPlay/pacman.html',
+            features: ['Classic Mode', 'New Power-ups', 'Custom Mazes'],
+            lastUpdated: new Date().toISOString()
+        },
+        {
+            title: 'Portal Puzzles',
+            description: 'Los complexe puzzels op met portaal mechanica in deze hersenkraker.',
+            imageUrl: '/images/portal.png',
+            genre: 'puzzle',
+            difficulty: 'hard',
+            path: 'PjotterPlay/portal.html',
+            features: ['Physics Based', 'Level Editor', 'Community Levels'],
+            lastUpdated: new Date().toISOString()
+        }
+    ];
+
+    // Check en voeg elke game toe
+    for (const game of games) {
+        const q = query(gamesRef, where('title', '==', game.title));
+        const querySnapshot = await getDocs(q);
+        
+        if (querySnapshot.empty) {
+            await addDoc(gamesRef, game);
+            console.log(`Added game: ${game.title}`);
+        }
     }
 }
 

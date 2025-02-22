@@ -1,0 +1,83 @@
+:root {
+    --primary-color: #2563eb;
+    --background-dark: #000000;
+    --game-bg: #1a1a1a;
+    --text-primary: #ffffff;
+    --text-secondary: #86868b;
+}
+
+.game-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: var(--game-bg);
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.game-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.score-container {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin: 1rem 0;
+    font-size: 1.2rem;
+}
+
+.game-area {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+#tetris {
+    border: 2px solid var(--primary-color);
+    background: #000;
+}
+
+.game-sidebar {
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+}
+
+.next-piece {
+    margin-bottom: 2rem;
+}
+
+.controls {
+    color: var(--text-secondary);
+}
+
+.game-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+button, .back-button {
+    padding: 0.75rem 1.5rem;
+    border-radius: 25px;
+    border: none;
+    background: var(--primary-color);
+    color: white;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+button:hover, .back-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+}
+
+.back-button {
+    text-decoration: none;
+    background: rgba(255, 255, 255, 0.1);
+} 

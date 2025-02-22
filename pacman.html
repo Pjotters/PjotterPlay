@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pac-Man Reloaded - GamePortal</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="pacman.css">
+</head>
+<body>
+    <div class="game-container">
+        <div class="game-header">
+            <h1>Pac-Man Reloaded</h1>
+            <div class="score-container">
+                <div class="score">Score: <span id="score">0</span></div>
+                <div class="level">Level: <span id="level">1</span></div>
+                <div class="lives">Levens: <span id="lives">3</span></div>
+            </div>
+        </div>
+        
+        <canvas id="gameCanvas" width="448" height="496"></canvas>
+        
+        <div class="game-controls">
+            <button id="startBtn">Start Game</button>
+            <button id="pauseBtn">Pauze</button>
+            <a href="gallery.html" class="back-button">Terug naar Galerie</a>
+        </div>
+    </div>
+    <script type="module" src="pacman.js"></script>
+</body>
+</html> 
