@@ -1,4 +1,4 @@
-class FactoryGame {
+export class FactoryGame {
     constructor() {
         this.app = new PIXI.Application({
             width: window.innerWidth - 250,
@@ -194,9 +194,39 @@ class FactoryGame {
                 <span>${building.name}</span>
                 <span>Kosten: ${building.cost}</span>
             `;
-            div.onclick = () => this.buildStructure(type);
+            div.addEventListener('click', () => this.selectBuilding(type));
             buildingOptions.appendChild(div);
         });
+
+        const workersList = document.getElementById('workersList');
+        Object.entries(this.workers).forEach(([type, count]) => {
+            const div = document.createElement('div');
+            div.className = 'worker-option';
+            div.innerHTML = `
+                <span>${this.getWorkerTitle(type)} inhuren (${this.getWorkerCost(type)} geld)</span>
+                <span id="${type}-count">${count}</span>
+            `;
+            div.addEventListener('click', () => this.hireWorker(type));
+            workersList.appendChild(div);
+        });
+    }
+
+    getWorkerTitle(type) {
+        const titles = {
+            woodcutters: 'Houthakker',
+            miners: 'Mijnwerker',
+            glassmakers: 'Glasmaker'
+        };
+        return titles[type] || type;
+    }
+
+    getWorkerCost(type) {
+        const costs = {
+            woodcutters: 50,
+            miners: 75,
+            glassmakers: 100
+        };
+        return costs[type] || 100;
     }
 
     setupResourcesDisplay() {

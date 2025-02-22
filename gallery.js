@@ -1,6 +1,6 @@
 // Firebase configuratie en initialisatie
-import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, query, where, getDocs, addDoc } from 'firebase/firestore';
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js';
+import { getFirestore, collection, query, where, getDocs, addDoc } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js';
 
 const firebaseConfig = {
     apiKey: "AIzaSyBCXaYJI9dxwqKD1Qsb_9AOdsnVTPG2uHM",
@@ -72,13 +72,18 @@ async function getFilteredGames(filters) {
 function createGameCard(game) {
     return `
         <div class="game-card">
-            <h2 class="game-title">${game.title}</h2>
-            <p class="game-description">${game.description}</p>
+            <div class="game-info">
+                <h2>${game.title}</h2>
+                <p>${game.description}</p>
+                <div class="game-meta">
+                    <span class="genre">${game.genre}</span>
+                    <span class="difficulty">${game.difficulty}</span>
+                </div>
+            </div>
             <div class="game-actions">
                 <a href="${game.path}" class="play-button">Speel</a>
                 <a href="#" class="more-info">Meer informatie ></a>
             </div>
-            <img src="${game.imageUrl}" alt="${game.title}" class="game-image">
         </div>
     `;
 }
@@ -95,15 +100,28 @@ function checkLogin() {
 
 // Games weergeven
 async function displayGames() {
-    if (!checkLogin()) return;
-    
-    const preferences = await getUserPreferences();
-    const recommendedGames = await getFilteredGames(preferences);
-    
-    const recommendedContainer = document.getElementById('recommendedGamesGrid');
-    recommendedContainer.innerHTML = recommendedGames
-        .map(game => createGameCard(game))
-        .join('');
+    try {
+        const gamesRef = collection(db, 'games');
+        const querySnapshot = await getDocs(gamesRef);
+        
+        const recommendedContainer = document.getElementById('recommendedGamesGrid');
+        if (!recommendedContainer) {
+            console.error('Container element not found');
+            return;
+        }
+
+        const games = querySnapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+        }));
+
+        recommendedContainer.innerHTML = games
+            .map(game => createGameCard(game))
+            .join('');
+
+    } catch (error) {
+        console.error('Error fetching games:', error);
+    }
 }
 
 // Event listeners
@@ -120,6 +138,10 @@ document.getElementById('applyFilters').addEventListener('click', async () => {
 
 // Roep de functie aan bij het laden van de pagina
 document.addEventListener('DOMContentLoaded', async () => {
-    await initializeGames();
-    displayGames();
+    try {
+        await initializeGames();
+        await displayGames();
+    } catch (error) {
+        console.error('Error initializing gallery:', error);
+    }
 }); 
