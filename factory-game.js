@@ -243,9 +243,20 @@ export class FactoryGame {
             `).join('');
     }
 
-    buildStructure(type) {
-        // Implementeer gebouw plaatsing logica
-        console.log(`Building ${type}`);
+    buildStructure(buildingType) {
+        const buildingCosts = {
+            delver: 200,
+            conveyor: 50,
+            transporter: 300
+        };
+
+        if (this.resources.money >= buildingCosts[buildingType]) {
+            this.resources.money -= buildingCosts[buildingType];
+            // Logica om het gebouw te plaatsen in de grid
+            console.log(`Gebouw ${buildingType} is geplaatst.`);
+        } else {
+            alert('Niet genoeg geld om dit gebouw te bouwen.');
+        }
     }
 
     updateWorld() {
