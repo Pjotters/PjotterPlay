@@ -116,7 +116,14 @@ async function initializeGames() {
 }
 
 // Start de game initialisatie
-document.addEventListener('DOMContentLoaded', initializeGames);
+document.addEventListener('DOMContentLoaded', () => {
+    // Initialize AOS (Animate On Scroll)
+    AOS.init({
+        duration: 800,
+        offset: 100,
+        once: true
+    });
+});
 
 // Gebruikersvoorkeuren ophalen
 async function getUserPreferences() {
@@ -258,25 +265,7 @@ async function displayGames() {
 document.addEventListener('DOMContentLoaded', async () => {
     try {
         await displayUsername();
-        await initializeGames();
         await displayGames();
-        
-        const applyFiltersButton = document.getElementById('applyFilters');
-        if (applyFiltersButton) {
-            applyFiltersButton.addEventListener('click', async () => {
-                const genreFilter = document.getElementById('genreFilter');
-                const difficultyFilter = document.getElementById('difficultyFilter');
-                
-                const filters = {
-                    genres: Array.from(genreFilter.selectedOptions).map(option => option.value),
-                    difficulty: difficultyFilter.value
-                };
-                
-                const filteredGames = await getFilteredGames(filters);
-                document.getElementById('filteredGamesGrid').innerHTML = 
-                    filteredGames.map(game => createGameCard(game)).join('');
-            });
-        }
     } catch (error) {
         console.error('Error initializing gallery:', error);
     }

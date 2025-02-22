@@ -2,182 +2,52 @@ import * as PIXI from 'pixi.js';
 
 export class FactoryGame {
     constructor() {
-        this.app = new PIXI.Application({
-            width: window.innerWidth - 250,
-            height: window.innerHeight,
-            backgroundColor: 0x1099bb,
-            resolution: window.devicePixelRatio || 1
+        // Wacht tot het document geladen is
+        document.addEventListener('DOMContentLoaded', () => {
+            this.init();
         });
-        document.getElementById('gameCanvas').appendChild(this.app.view);
+    }
 
+    init() {
+        // Resources initialiseren
         this.resources = {
             money: 1000,
             wood: 0,
             sand: 0,
             glass: 0,
-            fuel: 0,
-            electronics: 0,
-            computers: 0,
-            phones: 0,
-            plastic: 0,
-            copper: 0,
-            steel: 0,
-            circuits: 0
+            fuel: 0
         };
 
+        // Workers initialiseren
         this.workers = {
             woodcutters: 0,
             miners: 0,
             glassmakers: 0
         };
 
-        this.buildings = {
-            woodcutter_hut: { 
-                cost: 100, 
-                name: "Houthakkershut",
-                production: {
-                    wood: 1
-                },
-                workers_needed: 1
-            },
-            sand_mine: { 
-                cost: 150, 
-                name: "Zandmijn",
-                production: {
-                    sand: 1
-                },
-                workers_needed: 2
-            },
-            furnace: { 
-                cost: 300, 
-                name: "Oven",
-                production: {
-                    glass: 1
-                },
-                requires: {
-                    sand: 2,
-                    fuel: 1
-                },
-                workers_needed: 1
-            },
-            conveyor: {
-                cost: 50,
-                name: "Lopende Band",
-                transport_speed: 1
-            },
-            plastic_factory: {
-                cost: 400,
-                name: "Plastic Fabriek",
-                production: {
-                    plastic: 1
-                },
-                requires: {
-                    fuel: 2
-                },
-                workers_needed: 2
-            },
-            electronics_factory: {
-                cost: 600,
-                name: "Elektronica Fabriek",
-                production: {
-                    electronics: 1
-                },
-                requires: {
-                    copper: 2,
-                    plastic: 1
-                },
-                workers_needed: 3
-            }
-        };
+        // PixiJS applicatie maken
+        this.app = new PIXI.Application({
+            width: 800,
+            height: 600,
+            backgroundColor: 0x7cba3d, // Groen gras
+            antialias: true
+        });
 
-        this.currentWorld = 'forest'; // 'forest', 'desert', 'industrial'
+        // Canvas toevoegen aan container
+        const container = document.getElementById('gameCanvasContainer');
+        if (container) {
+            container.appendChild(this.app.view);
+        }
 
-        // Grid instellingen
-        this.gridSize = 32; // pixels per cel
-        this.worldWidth = 200; // aantal cellen
-        this.worldHeight = 200;
-        
-        // Container voor de game wereld
-        this.worldContainer = new PIXI.Container();
-        this.app.stage.addChild(this.worldContainer);
-        
-        // Camera controls
-        this.dragStart = null;
-        this.isDragging = false;
-        
-        // Ores genereren
-        this.ores = this.generateOres();
-        
-        // Gebouwen plaatsing mode
-        this.currentBuildingType = null;
-
-        this.productionLines = {
-            basicElectronics: new ProductionLine(
-                'electronics',
-                { copper: 2, glass: 1 },
-                'electronics',
-                60
-            ),
-            computer: new ProductionLine(
-                'computer',
-                { electronics: 3, glass: 2, plastic: 1 },
-                'computer',
-                120
-            ),
-            smartphone: new ProductionLine(
-                'smartphone',
-                { computer: 1, glass: 2, electronics: 2 },
-                'phone',
-                180
-            )
-        };
-
-        this.research = new Research();
-
-        this.market = new Market();
-
-        this.upgrades = {
-            automation: {
-                name: "Automatische Productie",
-                cost: 5000,
-                effect: "Verhoogt productie met 50%",
-                multiplier: 1.5,
-                purchased: false
-            },
-            efficiency: {
-                name: "Energie Efficiëntie",
-                cost: 3000,
-                effect: "Verlaagt energieverbruik met 30%",
-                multiplier: 0.7,
-                purchased: false
-            },
-            storage: {
-                name: "Uitgebreide Opslag",
-                cost: 2000,
-                effect: "Verdubbelt opslagcapaciteit",
-                multiplier: 2,
-                purchased: false
-            }
-        };
-
-        // Voeg visuele effecten toe
-        this.particles = [];
-        this.animations = new PIXI.AnimatedSprite();
-        
-        // Verbeterde UI elementen
-        this.setupUI();
-        
-        // Voeg achievement systeem toe
-        this.achievements = this.setupAchievements();
-
-        this.init();
+        // Wereld maken
+        this.createWorld();
+        this.setupEventListeners();
     }
 
-    init() {
-        this.setupWorldSwitcher();
-        this.setupBuildingPanel();
-        this.setupResourcesDisplay();
-        this.startGameLoop();
+    setupEventListeners() {
+        // Maak buildStructure en hireWorker globaal beschikbaar
+        window.buildStructure = (type) => this.buildStructure(type);
+        window.hireWorker = (type) => this.hireWorker(type);
     }
 
     setupWorldSwitcher() {
@@ -561,7 +431,5 @@ class ProductionChain {
     }
 }
 
-// Start de game wanneer het document geladen is
-document.addEventListener('DOMContentLoaded', () => {
-    const game = new FactoryGame();
-}); 
+// Game instance maken
+const game = new FactoryGame(); 
