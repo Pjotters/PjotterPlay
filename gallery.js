@@ -253,28 +253,12 @@ async function displayGames() {
 }
 
 // Event listeners
-document.getElementById('applyFilters').addEventListener('click', async () => {
-    const genreFilter = document.getElementById('genreFilter');
-    const difficultyFilter = document.getElementById('difficultyFilter');
-    
-    const filters = {
-        genres: Array.from(genreFilter.selectedOptions).map(option => option.value),
-        difficulty: difficultyFilter.value
-    };
-    
-    const filteredGames = await getFilteredGames(filters);
-    document.getElementById('allGamesGrid').innerHTML = 
-        filteredGames.map(game => createGameCard(game)).join('');
-});
-
-// Initialize games en display ze
 document.addEventListener('DOMContentLoaded', async () => {
     try {
         await displayUsername();
         await initializeGames();
         await displayGames();
         
-        // Voeg event listeners toe voor filters
         const applyFiltersButton = document.getElementById('applyFilters');
         if (applyFiltersButton) {
             applyFiltersButton.addEventListener('click', async () => {
@@ -287,7 +271,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 };
                 
                 const filteredGames = await getFilteredGames(filters);
-                document.getElementById('allGamesGrid').innerHTML = 
+                document.getElementById('filteredGamesGrid').innerHTML = 
                     filteredGames.map(game => createGameCard(game)).join('');
             });
         }
