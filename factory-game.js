@@ -24,6 +24,26 @@ class FactoryGame {
         // Ores genereren
         this.ores = this.generateOres();
         
+        // Gebouw types definiëren
+        this.buildingTypes = {
+            delver: {
+                name: 'Delver',
+                cost: 200,
+                texture: 'Images/delver.png',
+                production: 1
+            },
+            conveyor: {
+                name: 'Lopende Band',
+                cost: 50,
+                texture: 'Images/Band-Factory.png'
+            },
+            transporter: {
+                name: 'Transporteur',
+                cost: 300,
+                texture: 'Images/transporter.png'
+            }
+        };
+        
         // Game starten
         this.init();
     }
@@ -169,23 +189,13 @@ class FactoryGame {
     placeBuilding(x, y) {
         if (!this.selectedBuilding) return;
         
-        // Gebouw sprite maken op basis van type
-        let building;
-        let texture;
+        const buildingType = this.buildingTypes[this.selectedBuilding.type];
+        if (!buildingType || this.resources.money < buildingType.cost) return;
+
+        // Gebouw sprite maken
+        const texture = PIXI.Texture.from(buildingType.texture);
+        const building = new PIXI.Sprite(texture);
         
-        switch (this.selectedBuilding.type) {
-            case 'conveyor':
-                texture = PIXI.Texture.from('Images/Band-Factory.png');
-                break;
-            case 'delver':
-                texture = PIXI.Texture.from('Images/delver.png');
-                break;
-            case 'transporter':
-                texture = PIXI.Texture.from('Images/transporter.png');
-                break;
-        }
-        
-        building = new PIXI.Sprite(texture);
         building.width = this.gridSize;
         building.height = this.gridSize;
         building.x = x * this.gridSize;
@@ -194,7 +204,7 @@ class FactoryGame {
         this.worldContainer.addChild(building);
         
         // Resources updaten
-        this.resources.money -= this.selectedBuilding.cost;
+        this.resources.money -= buildingType.cost;
         this.updateResourceDisplay();
         
         // Reset selectie
@@ -203,19 +213,21 @@ class FactoryGame {
     }
 
     setupUI() {
-        // Voeg moderne UI elementen toe
-        this.tooltip = new PIXI.Text('', {
-            fontFamily: 'Arial',
-            fontSize: 14,
-            fill: 0xFFFFFF,
-            align: 'center'
+        // Gebouwen menu maken
+        const buildingsDiv = document.createElement('div');
+        buildingsDiv.className = 'buildings-menu';
+        
+        Object.entries(this.buildingTypes).forEach(([type, building]) => {
+            const button = document.createElement('button');
+            button.textContent = `${building.name} (${building.cost})`;
+            button.onclick = () => {
+                this.selectedBuilding = { type };
+                this.app.view.style.cursor = 'pointer';
+            };
+            buildingsDiv.appendChild(button);
         });
         
-        // Voeg minimap toe
-        this.setupMinimap();
-        
-        // Voeg statistieken venster toe
-        this.setupStatistics();
+        document.querySelector('.game-container').appendChild(buildingsDiv);
     }
 
     setupAchievements() {

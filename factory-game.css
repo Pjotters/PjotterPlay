@@ -246,4 +246,29 @@ button:hover {
 
 .building-option:hover {
     background: rgba(0, 0, 0, 0.9);
+}
+
+.buildings-menu {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.buildings-menu button {
+    padding: 10px;
+    background: #4CAF50;
+    border: none;
+    border-radius: 3px;
+    color: white;
+    cursor: pointer;
+}
+
+.buildings-menu button:hover {
+    background: #45a049;
 } 
