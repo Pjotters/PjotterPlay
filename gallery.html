@@ -29,12 +29,13 @@
             </div>
         </section>
 
-        <section class="filters-section">
+        <div class="content-section">
             <h2>Jouw Game Voorkeuren</h2>
-            <div class="filters">
+            <div class="filter-container">
                 <div class="filter-group">
-                    <label for="genreFilter">Genre:</label>
-                    <select id="genreFilter" multiple>
+                    <label>Genre:</label>
+                    <select id="genreFilter">
+                        <option value="all">Alle</option>
                         <option value="action">Actie</option>
                         <option value="puzzle">Puzzel</option>
                         <option value="strategy">Strategie</option>
@@ -42,7 +43,7 @@
                     </select>
                 </div>
                 <div class="filter-group">
-                    <label for="difficultyFilter">Moeilijkheidsgraad:</label>
+                    <label>Moeilijkheidsgraad:</label>
                     <select id="difficultyFilter">
                         <option value="all">Alle</option>
                         <option value="easy">Makkelijk</option>
@@ -50,9 +51,16 @@
                         <option value="hard">Moeilijk</option>
                     </select>
                 </div>
-                <button id="applyFilters" class="filter-button">Toepassen</button>
+                <button id="applyFilters">Toepassen</button>
             </div>
-        </section>
+
+            <div class="filtered-games">
+                <h3>Gefilterde Games</h3>
+                <div class="games-grid" id="filteredGamesGrid">
+                    <!-- Gefilterde games komen hier -->
+                </div>
+            </div>
+        </div>
 
         <section class="games-section">
             <h2>Aanbevolen voor jou</h2>
