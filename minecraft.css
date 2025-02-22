@@ -60,4 +60,58 @@ button:hover {
 
 .back-button:hover {
     background: #da190b;
+}
+
+.minecraft-ui {
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    gap: 20px;
+    padding: 20px;
+}
+
+.inventory-container {
+    background: rgba(0, 0, 0, 0.7);
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.crafting-table {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 5px;
+    margin-top: 10px;
+}
+
+.crafting-slot {
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid #666;
+}
+
+.furnace-ui {
+    display: grid;
+    grid-template-rows: auto auto auto;
+    gap: 10px;
+}
+
+.ore-indicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.inventory-slot {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 10px;
+    border-radius: 3px;
+    color: white;
+    cursor: pointer;
+}
+
+.inventory-slot.selected {
+    background: rgba(255, 255, 255, 0.4);
+    border: 2px solid white;
 } 
