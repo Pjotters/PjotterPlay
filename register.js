@@ -37,31 +37,40 @@ try {
         }
 
         try {
-            console.log('Attempting to create user:', email); // Debug log
+            // Eerst de gebruiker aanmaken
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
 
-            console.log('User created, updating profile...'); // Debug log
+            // Update profiel
             await updateProfile(user, {
                 displayName: username
             });
 
-            console.log('Profile updated, creating Firestore document...'); // Debug log
-            await setDoc(doc(db, 'users', user.uid), {
-                username: username,
-                email: email,
-                createdAt: new Date(),
-                gamePreferences: {
-                    genres: [],
-                    difficulty: 'all'
-                }
-            });
+            // Wacht even voordat we naar Firestore schrijven
+            await new Promise(resolve => setTimeout(resolve, 1000));
 
-            localStorage.setItem('userLoggedIn', 'true');
-            window.location.href = 'gallery.html'; // Verwijder de leading slash
+            // Maak gebruikersprofiel aan in Firestore met merge optie
+            try {
+                await setDoc(doc(db, 'users', user.uid), {
+                    username: username,
+                    email: email,
+                    createdAt: new Date().toISOString(),
+                    gamePreferences: {
+                        genres: [],
+                        difficulty: 'all'
+                    }
+                }, { merge: true });
 
+                localStorage.setItem('userLoggedIn', 'true');
+                window.location.href = 'gallery.html';
+            } catch (firestoreError) {
+                console.error('Firestore error:', firestoreError);
+                // Gebruiker is wel aangemaakt, dus doorsturen
+                localStorage.setItem('userLoggedIn', 'true');
+                window.location.href = 'gallery.html';
+            }
         } catch (error) {
-            console.error('Registration error:', error); // Debug log
+            console.error('Registration error:', error);
             let errorMessage = 'Registratie mislukt: ';
             
             switch (error.code) {
