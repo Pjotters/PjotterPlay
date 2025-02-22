@@ -11,22 +11,29 @@ class MinecraftGame {
         this.renderer.setClearColor(0x87CEEB); // Minecraft-achtige blauwe lucht
         document.getElementById('gameCanvas').appendChild(this.renderer.domElement);
         
-        // Texturen laden
-        this.textureLoader = new THREE.TextureLoader();
-        this.textures = {
-            grass: this.textureLoader.load('Images/minecraft/grass.png'),
-            dirt: this.textureLoader.load('Images/minecraft/dirt.png'),
-            stone: this.textureLoader.load('Images/minecraft/stone.png'),
-            wood: this.textureLoader.load('Images/minecraft/wood.png')
+        // Speler fysica toevoegen
+        this.player = {
+            velocity: 0,
+            gravity: -0.01,
+            jumpForce: 0.2,
+            canJump: false,
+            position: new THREE.Vector3(8, 5, 8)
         };
         
-        // Materialen maken
-        this.materials = {
-            grass: new THREE.MeshLambertMaterial({ map: this.textures.grass }),
-            dirt: new THREE.MeshLambertMaterial({ map: this.textures.dirt }),
-            stone: new THREE.MeshLambertMaterial({ map: this.textures.stone }),
-            wood: new THREE.MeshLambertMaterial({ map: this.textures.wood })
-        };
+        // Camera aan speler koppelen
+        this.camera.position.copy(this.player.position);
+        
+        // Skybox toevoegen
+        const skyboxGeometry = new THREE.BoxGeometry(1000, 1000, 1000);
+        const skyboxMaterial = new THREE.MeshBasicMaterial({
+            color: 0x87CEEB,
+            side: THREE.BackSide
+        });
+        const skybox = new THREE.Mesh(skyboxGeometry, skyboxMaterial);
+        this.scene.add(skybox);
+        
+        // Verbeterde texture loading
+        this.loadTextures();
         
         // Licht toevoegen
         const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
@@ -36,10 +43,6 @@ class MinecraftGame {
         sunLight.position.set(100, 100, 0);
         this.scene.add(sunLight);
         
-        // Camera positie
-        this.camera.position.set(8, 3, 8);
-        this.camera.lookAt(0, 0, 0);
-        
         // Speler beweging
         this.moveSpeed = 0.1;
         this.rotateSpeed = 0.02;
@@ -48,6 +51,39 @@ class MinecraftGame {
         this.setupControls();
         this.createWorld();
         this.animate();
+    }
+    
+    loadTextures() {
+        const textureLoader = new THREE.TextureLoader();
+        const loadTexture = (url) => {
+            return new Promise((resolve, reject) => {
+                textureLoader.load(
+                    url,
+                    (texture) => {
+                        texture.magFilter = THREE.NearestFilter;
+                        texture.minFilter = THREE.NearestFilter;
+                        resolve(texture);
+                    },
+                    undefined,
+                    reject
+                );
+            });
+        };
+
+        // Wacht tot alle texturen zijn geladen
+        Promise.all([
+            loadTexture('Images/minecraft/grass.png'),
+            loadTexture('Images/minecraft/dirt.png'),
+            loadTexture('Images/minecraft/stone.png'),
+            loadTexture('Images/minecraft/wood.png')
+        ]).then(([grassTex, dirtTex, stoneTex, woodTex]) => {
+            this.materials = {
+                grass: new THREE.MeshLambertMaterial({ map: grassTex }),
+                dirt: new THREE.MeshLambertMaterial({ map: dirtTex }),
+                stone: new THREE.MeshLambertMaterial({ map: stoneTex }),
+                wood: new THREE.MeshLambertMaterial({ map: woodTex })
+            };
+        });
     }
     
     createWorld() {
@@ -120,24 +156,42 @@ class MinecraftGame {
     }
     
     update() {
+        // Zwaartekracht toepassen
+        if (!this.player.canJump) {
+            this.player.velocity += this.player.gravity;
+            this.player.position.y += this.player.velocity;
+        }
+
+        // Grond detectie
+        if (this.player.position.y < 2) {
+            this.player.position.y = 2;
+            this.player.velocity = 0;
+            this.player.canJump = true;
+        }
+
+        // Camera updaten
+        this.camera.position.copy(this.player.position);
+        
+        // Beweging verwerken
         if (this.keys['w']) {
-            this.camera.position.x += Math.sin(this.camera.rotation.y) * this.moveSpeed;
-            this.camera.position.z += Math.cos(this.camera.rotation.y) * this.moveSpeed;
+            this.player.position.x += Math.sin(this.camera.rotation.y) * this.moveSpeed;
+            this.player.position.z += Math.cos(this.camera.rotation.y) * this.moveSpeed;
         }
         if (this.keys['s']) {
-            this.camera.position.x -= Math.sin(this.camera.rotation.y) * this.moveSpeed;
-            this.camera.position.z -= Math.cos(this.camera.rotation.y) * this.moveSpeed;
+            this.player.position.x -= Math.sin(this.camera.rotation.y) * this.moveSpeed;
+            this.player.position.z -= Math.cos(this.camera.rotation.y) * this.moveSpeed;
         }
         if (this.keys['a']) {
-            this.camera.position.x += Math.sin(this.camera.rotation.y + Math.PI/2) * this.moveSpeed;
-            this.camera.position.z += Math.cos(this.camera.rotation.y + Math.PI/2) * this.moveSpeed;
+            this.player.position.x += Math.sin(this.camera.rotation.y + Math.PI/2) * this.moveSpeed;
+            this.player.position.z += Math.cos(this.camera.rotation.y + Math.PI/2) * this.moveSpeed;
         }
         if (this.keys['d']) {
-            this.camera.position.x += Math.sin(this.camera.rotation.y - Math.PI/2) * this.moveSpeed;
-            this.camera.position.z += Math.cos(this.camera.rotation.y - Math.PI/2) * this.moveSpeed;
+            this.player.position.x += Math.sin(this.camera.rotation.y - Math.PI/2) * this.moveSpeed;
+            this.player.position.z += Math.cos(this.camera.rotation.y - Math.PI/2) * this.moveSpeed;
         }
-        if (this.keys[' ']) {
-            this.camera.position.y += this.moveSpeed;
+        if (this.keys[' '] && this.player.canJump) {
+            this.player.velocity = this.player.jumpForce;
+            this.player.canJump = false;
         }
     }
     

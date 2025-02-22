@@ -301,6 +301,71 @@ class FactoryGame {
             this.workers.woodcutters + this.workers.miners + this.workers.glassmakers
         }`;
     }
+
+    createLegend() {
+        const legend = document.createElement('div');
+        legend.className = 'game-legend';
+        legend.innerHTML = `
+            <h3>Legenda</h3>
+            <div class="legend-item">
+                <span class="legend-color" style="background: #FFD700"></span>
+                <span>Goud (50 per stuk)</span>
+            </div>
+            <div class="legend-item">
+                <span class="legend-color" style="background: #808080"></span>
+                <span>IJzer (30 per stuk)</span>
+            </div>
+            <div class="legend-item">
+                <span class="legend-color" style="background: #333333"></span>
+                <span>Kolen (20 per stuk)</span>
+            </div>
+            <div class="legend-item">
+                <img src="Images/factory/miner.png" alt="Delver">
+                <span>Delver (verzamelt grondstoffen)</span>
+            </div>
+            <div class="legend-item">
+                <img src="Images/factory/conveyor.png" alt="Lopende Band">
+                <span>Lopende Band (transporteert grondstoffen)</span>
+            </div>
+        `;
+        
+        document.querySelector('.game-container').appendChild(legend);
+    }
+
+    placeBuilding(type, x, y) {
+        if (this.resources.money >= this.buildingTypes[type].cost) {
+            const building = {
+                type: type,
+                x: x,
+                y: y,
+                resources: 0,
+                lastUpdate: Date.now()
+            };
+            
+            this.buildings.push(building);
+            this.resources.money -= this.buildingTypes[type].cost;
+            this.updateUI();
+            
+            if (type === 'MINER') {
+                this.workers.miners++;
+            }
+        }
+    }
+
+    update() {
+        const now = Date.now();
+        this.buildings.forEach(building => {
+            if (building.type === 'MINER') {
+                // Update elke seconde
+                if (now - building.lastUpdate >= 1000) {
+                    this.resources.wood += this.buildingTypes.MINER.production;
+                    building.lastUpdate = now;
+                }
+            }
+        });
+        
+        this.updateUI();
+    }
 }
 
 class ProductionLine {
