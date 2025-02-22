@@ -228,6 +228,65 @@ class FactoryGame {
     addProductionChain(input, process, output) {
         return new ProductionChain(input, process, output, this.resources);
     }
+
+    setupMinimap() {
+        // Maak een minimap container
+        this.minimap = new PIXI.Container();
+        this.minimap.position.set(10, this.app.screen.height - 110);
+        
+        // Achtergrond voor minimap
+        const background = new PIXI.Graphics();
+        background.beginFill(0x000000, 0.5);
+        background.drawRect(0, 0, 100, 100);
+        background.endFill();
+        this.minimap.addChild(background);
+        
+        // Teken ores op minimap
+        this.ores.forEach(ore => {
+            const dot = new PIXI.Graphics();
+            dot.beginFill(this.getOreColor(ore.type));
+            dot.drawCircle(0, 0, 2);
+            dot.endFill();
+            dot.x = (ore.x / this.worldWidth) * 100;
+            dot.y = (ore.y / this.worldHeight) * 100;
+            this.minimap.addChild(dot);
+        });
+        
+        this.app.stage.addChild(this.minimap);
+    }
+
+    setupStatistics() {
+        // Maak statistieken venster
+        this.stats = new PIXI.Container();
+        this.stats.position.set(this.app.screen.width - 110, 10);
+        
+        // Achtergrond voor stats
+        const background = new PIXI.Graphics();
+        background.beginFill(0x000000, 0.5);
+        background.drawRect(0, 0, 100, 100);
+        background.endFill();
+        this.stats.addChild(background);
+        
+        // Voeg statistieken tekst toe
+        this.statsText = new PIXI.Text('Stats:\n', {
+            fontFamily: 'Arial',
+            fontSize: 12,
+            fill: 0xFFFFFF
+        });
+        this.statsText.position.set(5, 5);
+        this.stats.addChild(this.statsText);
+        
+        this.app.stage.addChild(this.stats);
+        this.updateStats();
+    }
+
+    updateStats() {
+        this.statsText.text = `Stats:\nGeld: ${this.resources.money}\nGrondstoffen: ${
+            this.resources.wood + this.resources.sand + this.resources.glass
+        }\nWerknemers: ${
+            this.workers.woodcutters + this.workers.miners + this.workers.glassmakers
+        }`;
+    }
 }
 
 class ProductionLine {

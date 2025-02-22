@@ -117,11 +117,32 @@ async function initializeGames() {
 
 // Start de game initialisatie
 document.addEventListener('DOMContentLoaded', () => {
-    // Initialize AOS (Animate On Scroll)
+    // Initialize AOS
     AOS.init({
         duration: 800,
         offset: 100,
         once: true
+    });
+
+    // Logout functionaliteit
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            // Hier kun je uitlog logica toevoegen
+            window.location.href = 'index.html';
+        });
+    }
+
+    // Game cards hover effect
+    const gameCards = document.querySelectorAll('.game-card');
+    gameCards.forEach(card => {
+        card.addEventListener('mouseenter', () => {
+            card.querySelector('.card-inner').style.transform = 'rotateY(180deg)';
+        });
+        card.addEventListener('mouseleave', () => {
+            card.querySelector('.card-inner').style.transform = 'rotateY(0deg)';
+        });
     });
 });
 
