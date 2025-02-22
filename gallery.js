@@ -1,6 +1,7 @@
 // Firebase configuratie en initialisatie
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js';
 import { getFirestore, collection, query, where, getDocs, addDoc } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js';
+import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js';
 
 const firebaseConfig = {
     apiKey: "AIzaSyBCXaYJI9dxwqKD1Qsb_9AOdsnVTPG2uHM",
@@ -103,6 +104,20 @@ document.getElementById('logoutBtn').addEventListener('click', () => {
     window.location.href = 'login.html';
 });
 
+// Voeg deze functie toe om de gebruikersnaam weer te geven
+async function displayUsername() {
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            const username = user.displayName;
+            const welcomeMessage = document.querySelector('.game-description');
+            if (welcomeMessage) {
+                welcomeMessage.textContent = `Beste ${username}, hier kun je games spelen en bekijken.`;
+            }
+        }
+    });
+}
+
 // Games weergeven
 async function displayGames() {
     try {
@@ -110,12 +125,10 @@ async function displayGames() {
         
         const gamesRef = collection(db, 'games');
         const querySnapshot = await getDocs(gamesRef);
-        
-        const recommendedContainer = document.getElementById('recommendedGamesGrid');
         const allGamesContainer = document.getElementById('allGamesGrid');
         
-        if (!recommendedContainer || !allGamesContainer) {
-            console.error('Container elements not found');
+        if (!allGamesContainer) {
+            console.error('Games container not found');
             return;
         }
 
@@ -124,13 +137,42 @@ async function displayGames() {
             ...doc.data()
         }));
 
-        // Toon alle games in beide containers
-        const gameCards = games.map(game => createGameCard(game)).join('');
-        recommendedContainer.innerHTML = gameCards;
-        allGamesContainer.innerHTML = gameCards;
+        const gameCards = games.map(game => `
+            <div class="game-card" data-aos="fade-up">
+                <div class="game-card-inner">
+                    <div class="game-image-container">
+                        <img src="${game.imageUrl}" alt="${game.title}" loading="lazy">
+                        <div class="game-overlay">
+                            <a href="${game.path}" class="play-button">Speel nu</a>
+                        </div>
+                    </div>
+                    <div class="game-info">
+                        <h3>${game.title}</h3>
+                        <p>${game.description}</p>
+                        <div class="game-meta">
+                            <span class="genre">${game.genre}</span>
+                            <span class="difficulty">${game.difficulty}</span>
+                        </div>
+                        <div class="game-features">
+                            ${game.features.map(feature => `
+                                <span class="feature-tag">${feature}</span>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `).join('');
 
+        allGamesContainer.innerHTML = gameCards;
+        
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            offset: 100,
+            once: true
+        });
     } catch (error) {
-        console.error('Error fetching games:', error);
+        console.error('Error displaying games:', error);
     }
 }
 
@@ -152,6 +194,7 @@ document.getElementById('applyFilters').addEventListener('click', async () => {
 // Initialize games en display ze
 document.addEventListener('DOMContentLoaded', async () => {
     try {
+        await displayUsername();
         await initializeGames();
         await displayGames();
         

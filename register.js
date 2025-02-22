@@ -72,7 +72,7 @@ try {
 
             // Redirect altijd als de gebruiker is aangemaakt
             localStorage.setItem('userLoggedIn', 'true');
-            window.location.href = 'gallery.html';
+            window.location.href = 'login.html';
 
         } catch (error) {
             console.error('Registration error:', error);

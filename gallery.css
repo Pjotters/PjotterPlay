@@ -183,21 +183,54 @@ body {
 
 .games-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     gap: 2rem;
+    padding: 2rem;
 }
 
 .game-card {
-    background: linear-gradient(145deg, #2d2d2d, #333333);
-    border-radius: var(--border-radius);
+    background: var(--card-bg, #2d2d2d);
+    border-radius: 16px;
     overflow: hidden;
-    transition: var(--transition);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .game-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    transform: translateY(-8px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+}
+
+.game-image-container {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 16/9;
+}
+
+.game-image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.game-card:hover .game-image-container img {
+    transform: scale(1.05);
+}
+
+.game-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.game-card:hover .game-overlay {
+    opacity: 1;
 }
 
 .game-info {
@@ -205,15 +238,75 @@ body {
 }
 
 .game-info h3 {
-    margin: 0 0 1rem 0;
     font-size: 1.25rem;
-    color: var(--text-primary);
+    margin: 0 0 0.5rem;
+    color: var(--text-primary, #ffffff);
 }
 
 .game-info p {
-    color: var(--text-secondary);
-    line-height: 1.5;
+    font-size: 0.9rem;
+    color: var(--text-secondary, #a0a0a0);
     margin-bottom: 1rem;
+    line-height: 1.5;
+}
+
+.game-meta {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.genre, .difficulty {
+    font-size: 0.8rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    background: rgba(37, 99, 235, 0.1);
+    color: var(--primary-color, #2563eb);
+}
+
+.game-features {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.feature-tag {
+    font-size: 0.75rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-secondary, #a0a0a0);
+}
+
+.play-button {
+    background: var(--primary-color, #2563eb);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.play-button:hover {
+    background: var(--accent-color, #3b82f6);
+    transform: scale(1.05);
+}
+
+/* Animaties voor filteren */
+.game-card {
+    animation: cardAppear 0.4s ease-out;
+}
+
+@keyframes cardAppear {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .game-actions {
