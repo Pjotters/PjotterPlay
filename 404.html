@@ -34,17 +34,19 @@
         }
 
         .game-container {
-            width: 320px;
-            height: 480px;
-            margin: 20px auto;
-            position: relative;
-            overflow: hidden;
-            background: #70c5ce;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
         }
-
-        #gameCanvas {
+        
+        .score {
+            font-size: 24px;
+            color: white;
+        }
+        
+        canvas {
+            background: #87CEEB;
             border-radius: 10px;
         }
 
@@ -73,15 +75,6 @@
             box-shadow: 0 0 20px rgba(255, 62, 62, 0.5);
         }
 
-        .game-score {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 24px;
-            color: white;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-        }
-
         @keyframes glitch {
             0% { transform: translate(0); }
             20% { transform: translate(-2px, 2px); }
@@ -97,10 +90,10 @@
         <h1 class="error-code">404</h1>
         <p class="error-message">Oeps! Deze pagina is niet gevonden.</p>
         <p class="error-message">Speel Flappy Bird terwijl je wacht!</p>
+        <div class="score">Score: 0</div>
         
         <div class="game-container">
             <canvas id="gameCanvas" width="320" height="480"></canvas>
-            <div class="game-score">Score: <span id="score">0</span></div>
         </div>
 
         <p class="error-message">Druk op SPATIE om te springen</p>
@@ -109,7 +102,7 @@
     <script>
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
-        const scoreElement = document.getElementById('score');
+        const scoreElement = document.querySelector('.score');
 
         // Laad de logo afbeelding
         const birdSprite = new Image();
