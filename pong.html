@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pong Multiplayer - GamePortal</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="pong.css">
+</head>
+<body>
+    <div class="game-container">
+        <div class="game-header">
+            <h1>Pong Multiplayer</h1>
+            <div class="score-container">
+                <div class="player1-score">Speler 1: <span id="player1Score">0</span></div>
+                <div class="player2-score">Speler 2: <span id="player2Score">0</span></div>
+            </div>
+        </div>
+        
+        <canvas id="gameCanvas" width="800" height="400"></canvas>
+        
+        <div class="controls-info">
+            <div class="player1-controls">
+                <h3>Speler 1</h3>
+                <p>W: Omhoog</p>
+                <p>S: Omlaag</p>
+            </div>
+            <div class="player2-controls">
+                <h3>Speler 2</h3>
+                <p>↑: Omhoog</p>
+                <p>↓: Omlaag</p>
+            </div>
+        </div>
+
+        <div class="game-controls">
+            <button id="startBtn">Start Game</button>
+            <button id="pauseBtn">Pauze</button>
+            <a href="gallery.html" class="back-button">Terug naar Galerie</a>
+        </div>
+    </div>
+    <script src="pong.js"></script>
+</body>
+</html> 

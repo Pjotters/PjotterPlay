@@ -3,15 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minecraft - GamePortal</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <style>
-        body { margin: 0; }
-        canvas { display: block; }
-    </style>
+    <title>Minecraft Classic - GamePortal</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="minecraft.css">
+    <script type="module" src="https://unpkg.com/three@0.132.2/build/three.module.js"></script>
 </head>
 <body>
-    <div id="game-container"></div>
+    <div class="game-container">
+        <div class="game-header">
+            <h1>Minecraft Classic</h1>
+            <div class="controls-info">
+                <p>WASD: Bewegen</p>
+                <p>Linkermuisknop: Blok plaatsen</p>
+                <p>Rechtermuisknop: Blok verwijderen</p>
+                <p>Spatie: Springen</p>
+            </div>
+        </div>
+        <div id="gameCanvas"></div>
+        <div class="game-controls">
+            <button id="startBtn">Start Game</button>
+            <a href="gallery.html" class="back-button">Terug naar Galerie</a>
+        </div>
+    </div>
     <script type="module" src="minecraft.js"></script>
 </body>
 </html> 
