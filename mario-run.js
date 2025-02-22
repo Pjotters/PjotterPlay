@@ -48,10 +48,10 @@ class MarioRun {
             background: new Image()
         };
 
-        this.sprites.mario.src = 'images/mario-sprites.png';
-        this.sprites.coin.src = 'images/coin.png';
-        this.sprites.platform.src = 'images/platform.png';
-        this.sprites.background.src = 'images/mario-background.png';
+        this.sprites.mario.src = 'Images/mario-sprites.png';
+        this.sprites.coin.src = 'Images/coin.png';
+        this.sprites.platform.src = 'Images/platform.png';
+        this.sprites.background.src = 'Images/mario-background.png';
     }
 
     generateInitialPlatforms() {
