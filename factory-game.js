@@ -1,12 +1,10 @@
 class FactoryGame {
     constructor() {
-        // Wacht tot het document geladen is
-        document.addEventListener('DOMContentLoaded', () => {
-            this.init();
-        });
-    }
-
-    init() {
+        this.worldWidth = 20;
+        this.worldHeight = 15;
+        this.gridSize = 32;
+        this.selectedBuilding = null;
+        
         // Resources initialiseren
         this.resources = {
             money: 1000,
@@ -23,15 +21,27 @@ class FactoryGame {
             glassmakers: 0
         };
 
+        // Ores genereren
+        this.ores = this.generateOres();
+        
+        // Game starten
+        this.init();
+    }
+
+    init() {
         // PixiJS applicatie maken
         this.app = new PIXI.Application({
-            width: 800,
-            height: 600,
-            backgroundColor: 0x7cba3d, // Groen gras
+            width: this.worldWidth * this.gridSize,
+            height: this.worldHeight * this.gridSize,
+            backgroundColor: 0x7cba3d,
             antialias: true
         });
 
-        // Canvas toevoegen aan container
+        // World container maken
+        this.worldContainer = new PIXI.Container();
+        this.app.stage.addChild(this.worldContainer);
+
+        // Canvas toevoegen
         const container = document.getElementById('gameCanvasContainer');
         if (container) {
             container.appendChild(this.app.view);
@@ -40,168 +50,37 @@ class FactoryGame {
         // Wereld maken
         this.createWorld();
         this.setupEventListeners();
-    }
-
-    setupEventListeners() {
-        // Maak buildStructure en hireWorker globaal beschikbaar
-        window.buildStructure = (type) => this.buildStructure(type);
-        window.hireWorker = (type) => this.hireWorker(type);
-    }
-
-    setupWorldSwitcher() {
-        document.getElementById('switchWorld').addEventListener('click', () => {
-            this.currentWorld = this.currentWorld === 'factory' ? 'mining' : 'factory';
-            this.updateWorld();
-        });
-    }
-
-    setupBuildingPanel() {
-        const buildingOptions = document.getElementById('buildingOptions');
-        Object.entries(this.buildings).forEach(([type, building]) => {
-            const div = document.createElement('div');
-            div.className = 'building-option';
-            div.innerHTML = `
-                <span>${building.name}</span>
-                <span>Kosten: ${building.cost}</span>
-            `;
-            div.addEventListener('click', () => this.selectBuilding(type));
-            buildingOptions.appendChild(div);
-        });
-
-        const workersList = document.getElementById('workersList');
-        Object.entries(this.workers).forEach(([type, count]) => {
-            const div = document.createElement('div');
-            div.className = 'worker-option';
-            div.innerHTML = `
-                <span>${this.getWorkerTitle(type)} inhuren (${this.getWorkerCost(type)} geld)</span>
-                <span id="${type}-count">${count}</span>
-            `;
-            div.addEventListener('click', () => this.hireWorker(type));
-            workersList.appendChild(div);
-        });
-    }
-
-    getWorkerTitle(type) {
-        const titles = {
-            woodcutters: 'Houthakker',
-            miners: 'Mijnwerker',
-            glassmakers: 'Glasmaker'
-        };
-        return titles[type] || type;
-    }
-
-    getWorkerCost(type) {
-        const costs = {
-            woodcutters: 50,
-            miners: 75,
-            glassmakers: 100
-        };
-        return costs[type] || 100;
-    }
-
-    setupResourcesDisplay() {
-        this.updateResourcesDisplay();
-    }
-
-    updateResourcesDisplay() {
-        const resourcesList = document.getElementById('resourcesList');
-        resourcesList.innerHTML = Object.entries(this.resources)
-            .map(([resource, amount]) => `
-                <div class="resource-item">
-                    <span>${resource}: ${amount}</span>
-                </div>
-            `).join('');
-    }
-
-    buildStructure(buildingType) {
-        const buildingCosts = {
-            delver: 200,
-            conveyor: 50,
-            transporter: 300
-        };
-
-        if (this.resources.money >= buildingCosts[buildingType]) {
-            this.resources.money -= buildingCosts[buildingType];
-            // Logica om het gebouw te plaatsen in de grid
-            console.log(`Gebouw ${buildingType} is geplaatst.`);
-        } else {
-            alert('Niet genoeg geld om dit gebouw te bouwen.');
-        }
-    }
-
-    updateWorld() {
-        // Wissel tussen fabrieks- en mijnbouwwereld
-        console.log(`Switching to ${this.currentWorld} world`);
-    }
-
-    startGameLoop() {
-        this.app.ticker.add(() => {
-            this.gameLoop();
-        });
-    }
-
-    gameLoop() {
-        this.produceResources();
-        this.updateResourcesDisplay();
-    }
-
-    hireWorker(type) {
-        const costs = {
-            woodcutters: 50,
-            miners: 75,
-            glassmakers: 100
-        };
-
-        if (this.resources.money >= costs[type]) {
-            this.resources.money -= costs[type];
-            this.workers[type]++;
-            this.updateResourcesDisplay();
-        }
-    }
-
-    produceResources() {
-        // Hout productie
-        if (this.workers.woodcutters > 0) {
-            this.resources.wood += this.workers.woodcutters * 1;
-            this.resources.fuel += Math.floor(this.workers.woodcutters * 0.5); // Deel van hout wordt brandstof
-        }
-
-        // Zand productie
-        if (this.workers.miners > 0) {
-            this.resources.sand += this.workers.miners * 1;
-        }
-
-        // Glas productie
-        if (this.workers.glassmakers > 0 && this.resources.sand >= 2 && this.resources.fuel >= 1) {
-            const maxProduction = Math.min(
-                Math.floor(this.resources.sand / 2),
-                this.resources.fuel,
-                this.workers.glassmakers
-            );
-            
-            this.resources.glass += maxProduction;
-            this.resources.sand -= maxProduction * 2;
-            this.resources.fuel -= maxProduction;
-        }
+        this.setupUI();
     }
 
     generateOres() {
         const ores = [];
-        // Genereer 50 random ore deposits
-        for (let i = 0; i < 50; i++) {
+        const oreTypes = ['iron', 'coal', 'gold'];
+        
+        // Genereer 20 willekeurige ores
+        for (let i = 0; i < 20; i++) {
             ores.push({
+                type: oreTypes[Math.floor(Math.random() * oreTypes.length)],
                 x: Math.floor(Math.random() * this.worldWidth),
-                y: Math.floor(Math.random() * this.worldHeight),
-                type: ['iron', 'copper', 'coal'][Math.floor(Math.random() * 3)]
+                y: Math.floor(Math.random() * this.worldHeight)
             });
         }
         return ores;
     }
 
+    getOreColor(type) {
+        const colors = {
+            iron: 0x808080,
+            coal: 0x333333,
+            gold: 0xFFD700
+        };
+        return colors[type] || 0x000000;
+    }
+
     createWorld() {
-        // Maak grid
+        // Grid tekenen
         const graphics = new PIXI.Graphics();
-        graphics.lineStyle(1, 0x333333, 0.5);
+        graphics.lineStyle(1, 0x333333, 0.3);
         
         for (let x = 0; x <= this.worldWidth; x++) {
             graphics.moveTo(x * this.gridSize, 0);
@@ -215,11 +94,11 @@ class FactoryGame {
         
         this.worldContainer.addChild(graphics);
         
-        // Teken ores
+        // Ores tekenen
         this.ores.forEach(ore => {
             const oreSprite = new PIXI.Graphics();
             oreSprite.beginFill(this.getOreColor(ore.type));
-            oreSprite.drawCircle(0, 0, this.gridSize / 2);
+            oreSprite.drawCircle(0, 0, this.gridSize / 3);
             oreSprite.endFill();
             oreSprite.x = ore.x * this.gridSize + this.gridSize / 2;
             oreSprite.y = ore.y * this.gridSize + this.gridSize / 2;
@@ -227,39 +106,86 @@ class FactoryGame {
         });
     }
 
-    getOreColor(type) {
-        switch(type) {
-            case 'iron': return 0x8b8b8b;
-            case 'copper': return 0xb87333;
-            case 'coal': return 0x2f2f2f;
-            default: return 0xffffff;
+    buildStructure(type) {
+        if (this.selectedBuilding) {
+            this.selectedBuilding = null;
+        }
+        
+        const costs = {
+            delver: 200,
+            conveyor: 50,
+            transporter: 300
+        };
+
+        if (this.resources.money >= costs[type]) {
+            this.selectedBuilding = {
+                type: type,
+                cost: costs[type]
+            };
+            
+            // Maak de cursor een gebouw-plaatsing cursor
+            this.app.view.style.cursor = 'crosshair';
+        } else {
+            alert('Niet genoeg geld om dit gebouw te bouwen!');
         }
     }
 
-    setupControls() {
-        this.app.view.addEventListener('mousedown', this.onDragStart.bind(this));
-        this.app.view.addEventListener('mousemove', this.onDragMove.bind(this));
-        this.app.view.addEventListener('mouseup', this.onDragEnd.bind(this));
-        this.app.view.addEventListener('click', this.onWorldClick.bind(this));
-    }
+    hireWorker(type) {
+        const costs = {
+            woodcutter: 50,
+            miner: 75,
+            glassmaker: 100
+        };
 
-    onWorldClick(event) {
-        if (!this.isDragging && this.currentBuildingType) {
-            const worldPos = this.app.renderer.plugins.interaction.mouse.getLocalPosition(this.worldContainer);
-            const gridX = Math.floor(worldPos.x / this.gridSize);
-            const gridY = Math.floor(worldPos.y / this.gridSize);
-            this.placeBuilding(this.currentBuildingType, gridX, gridY);
+        if (this.resources.money >= costs[type]) {
+            this.resources.money -= costs[type];
+            this.workers[type + 's']++;
+            this.updateResourceDisplay();
+        } else {
+            alert('Niet genoeg geld om deze werknemer in te huren!');
         }
     }
 
-    placeBuilding(type, gridX, gridY) {
+    updateResourceDisplay() {
+        document.getElementById('money').textContent = this.resources.money;
+        document.getElementById('resources').textContent = 
+            this.resources.wood + this.resources.sand + this.resources.glass;
+        document.getElementById('workers').textContent = 
+            this.workers.woodcutters + this.workers.miners + this.workers.glassmakers;
+    }
+
+    setupEventListeners() {
+        this.app.view.addEventListener('click', (e) => {
+            if (this.selectedBuilding) {
+                const rect = this.app.view.getBoundingClientRect();
+                const x = Math.floor((e.clientX - rect.left) / this.gridSize);
+                const y = Math.floor((e.clientY - rect.top) / this.gridSize);
+                
+                this.placeBuilding(x, y);
+            }
+        });
+    }
+
+    placeBuilding(x, y) {
+        if (!this.selectedBuilding) return;
+        
+        // Gebouw plaatsen
         const building = new PIXI.Graphics();
         building.beginFill(0x666666);
         building.drawRect(0, 0, this.gridSize, this.gridSize);
         building.endFill();
-        building.x = gridX * this.gridSize;
-        building.y = gridY * this.gridSize;
+        building.x = x * this.gridSize;
+        building.y = y * this.gridSize;
+        
         this.worldContainer.addChild(building);
+        
+        // Resources updaten
+        this.resources.money -= this.selectedBuilding.cost;
+        this.updateResourceDisplay();
+        
+        // Reset selectie
+        this.selectedBuilding = null;
+        this.app.view.style.cursor = 'default';
     }
 
     setupUI() {
@@ -429,5 +355,5 @@ class ProductionChain {
     }
 }
 
-// Game instance maken
-const game = new FactoryGame(); 
+// Game instance maken en globaal beschikbaar maken
+window.game = new FactoryGame(); 

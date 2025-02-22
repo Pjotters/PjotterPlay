@@ -19,58 +19,47 @@
             </div>
         </div>
         <div id="gameCanvasContainer"></div>
-        <div class="factory-layout">
-            <div class="sidebar">
-                <div class="buildings-menu">
-                    <h2>Gebouwen</h2>
-                    <div class="building-item" data-building="delver">
-                        <h3>Delver</h3>
-                        <p>Kosten: 200</p>
-                        <button onclick="buildStructure('delver')">Bouwen</button>
-                    </div>
-                    <div class="building-item" data-building="conveyor">
-                        <h3>Lopende Band</h3>
-                        <p>Kosten: 50</p>
-                        <button onclick="buildStructure('conveyor')">Bouwen</button>
-                    </div>
-                    <div class="building-item" data-building="transporter">
-                        <h3>Transporteur</h3>
-                        <p>Kosten: 300</p>
-                        <button onclick="buildStructure('transporter')">Bouwen</button>
-                    </div>
+        
+        <div class="controls-container">
+            <div class="buildings-menu">
+                <h2>Gebouwen</h2>
+                <div class="building-item">
+                    <h3>Delver</h3>
+                    <p>Kosten: 200</p>
+                    <button onclick="game.buildStructure('delver')">Bouwen</button>
                 </div>
-
-                <div class="workers-menu">
-                    <h2>Werknemers</h2>
-                    <div class="worker-item">
-                        <h3>Houthakker</h3>
-                        <p>Kosten: 50 per maand</p>
-                        <button onclick="hireWorker('woodcutter')">Inhuren</button>
-                    </div>
-                    <div class="worker-item">
-                        <h3>Mijnwerker</h3>
-                        <p>Kosten: 75 per maand</p>
-                        <button onclick="hireWorker('miner')">Inhuren</button>
-                    </div>
-                    <div class="worker-item">
-                        <h3>Glasmaker</h3>
-                        <p>Kosten: 100 per maand</p>
-                        <button onclick="hireWorker('glassmaker')">Inhuren</button>
-                    </div>
+                <div class="building-item">
+                    <h3>Lopende Band</h3>
+                    <p>Kosten: 50</p>
+                    <button onclick="game.buildStructure('conveyor')">Bouwen</button>
+                </div>
+                <div class="building-item">
+                    <h3>Transporteur</h3>
+                    <p>Kosten: 300</p>
+                    <button onclick="game.buildStructure('transporter')">Bouwen</button>
                 </div>
             </div>
 
-            <div class="factory-grid" id="factoryGrid">
-                <!-- Grid voor de fabriek layout -->
+            <div class="workers-menu">
+                <h2>Werknemers</h2>
+                <div class="worker-item">
+                    <h3>Houthakker</h3>
+                    <p>Kosten: 50 per maand</p>
+                    <button onclick="game.hireWorker('woodcutter')">Inhuren</button>
+                </div>
+                <div class="worker-item">
+                    <h3>Mijnwerker</h3>
+                    <p>Kosten: 75 per maand</p>
+                    <button onclick="game.hireWorker('miner')">Inhuren</button>
+                </div>
+                <div class="worker-item">
+                    <h3>Glasmaker</h3>
+                    <p>Kosten: 100 per maand</p>
+                    <button onclick="game.hireWorker('glassmaker')">Inhuren</button>
+                </div>
             </div>
-        </div>
-
-        <div class="game-controls">
-            <button id="startBtn">Start Productie</button>
-            <button id="pauseBtn">Pauze</button>
-            <a href="gallery.html" class="back-button">Terug naar Galerie</a>
         </div>
     </div>
-    <script type="module" src="factory-game.js"></script>
+    <script src="factory-game.js"></script>
 </body>
 </html> 
