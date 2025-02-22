@@ -111,6 +111,10 @@
         const ctx = canvas.getContext('2d');
         const scoreElement = document.getElementById('score');
 
+        // Laad de logo afbeelding
+        const birdSprite = new Image();
+        birdSprite.src = 'Images/logo.png';
+
         // Game variabelen
         const bird = {
             x: 50,
@@ -160,9 +164,12 @@
         }
 
         function update() {
-            // Bird physics
-            bird.velocity += bird.gravity;
-            bird.y += bird.velocity;
+            // Teken de vogel (logo)
+            ctx.save();
+            ctx.translate(bird.x, bird.y);
+            ctx.rotate(bird.velocity * 0.1); // Kleine rotatie gebaseerd op snelheid
+            ctx.drawImage(birdSprite, -bird.size/2, -bird.size/2, bird.size * 1.5, bird.size * 1.5);
+            ctx.restore();
 
             // Create pipes
             if (pipes.length === 0 || pipes[pipes.length - 1].x < canvas.width - 200) {
@@ -202,8 +209,11 @@
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
             // Draw bird
-            ctx.fillStyle = '#ffd700';
-            ctx.fillRect(bird.x, bird.y, bird.size, bird.size);
+            ctx.save();
+            ctx.translate(bird.x, bird.y);
+            ctx.rotate(bird.velocity * 0.1); // Kleine rotatie gebaseerd op snelheid
+            ctx.drawImage(birdSprite, -bird.size/2, -bird.size/2, bird.size * 1.5, bird.size * 1.5);
+            ctx.restore();
 
             // Draw pipes
             ctx.fillStyle = '#2ed573';
