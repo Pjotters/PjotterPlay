@@ -171,24 +171,23 @@ class FactoryGame {
         
         // Gebouw sprite maken op basis van type
         let building;
+        let texture;
         
         switch (this.selectedBuilding.type) {
             case 'conveyor':
-                // Lopende band sprite maken
-                const texture = PIXI.Texture.from('Images/Band-Factory.png');
-                building = new PIXI.Sprite(texture);
-                building.width = this.gridSize;
-                building.height = this.gridSize;
+                texture = PIXI.Texture.from('Images/Band-Factory.png');
                 break;
-            
-            default:
-                // Standaard gebouw (voor andere types)
-                building = new PIXI.Graphics();
-                building.beginFill(0x666666);
-                building.drawRect(0, 0, this.gridSize, this.gridSize);
-                building.endFill();
+            case 'delver':
+                texture = PIXI.Texture.from('Images/Delver-Factory.png');
+                break;
+            case 'transporter':
+                texture = PIXI.Texture.from('Images/Transporter-Factory.png');
+                break;
         }
         
+        building = new PIXI.Sprite(texture);
+        building.width = this.gridSize;
+        building.height = this.gridSize;
         building.x = x * this.gridSize;
         building.y = y * this.gridSize;
         
