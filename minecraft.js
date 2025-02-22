@@ -50,24 +50,15 @@ class MinecraftGame {
         const skybox = new THREE.Mesh(skyboxGeometry, skyboxMaterial);
         this.scene.add(skybox);
         
-        // Texturen laden
-        this.loadTextures();
+        // Eerst texturen laden, dan pas de wereld maken
+        this.loadTextures().then(() => {
+            this.createWorld();
+            this.animate();
+        });
         
-        // Licht toevoegen
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
-        this.scene.add(ambientLight);
-        
-        const sunLight = new THREE.DirectionalLight(0xffffff, 0.8);
-        sunLight.position.set(100, 100, 0);
-        this.scene.add(sunLight);
-        
-        // Speler beweging
-        this.moveSpeed = 0.1;
-        this.rotateSpeed = 0.02;
-        this.keys = {};
-        
-        // UI toevoegen
+        // UI en controls wel direct instellen
         this.createUI();
+        this.setupControls();
         
         // Blok plaatsing toevoegen
         this.raycaster = new THREE.Raycaster();
@@ -76,8 +67,6 @@ class MinecraftGame {
         
         // Uitgebreide controls setup
         this.setupControls();
-        this.createWorld();
-        this.animate();
         
         // Extra materialen voor ores
         this.oreTypes = {
@@ -106,12 +95,16 @@ class MinecraftGame {
                         resolve(texture);
                     },
                     undefined,
-                    reject
+                    (error) => {
+                        console.error(`Error loading texture ${url}:`, error);
+                        reject(error);
+                    }
                 );
             });
         };
 
-        Promise.all([
+        // Return de Promise zodat we kunnen wachten
+        return Promise.all([
             loadTexture('Images/minecraft/grass.png'),
             loadTexture('Images/minecraft/dirt.png'),
             loadTexture('Images/minecraft/stone.png'),
